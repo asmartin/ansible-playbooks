@@ -1,0 +1,10 @@
+---
+packages_arch:
+ - tmux
+ - vim
+
+packages_ubuntu:
+ - tmux
+ - vim
+ - aptitude
+ - nfs-client
