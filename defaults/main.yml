@@ -1,0 +1,13 @@
+---
+apache2_hostname: "{{ ansible_hostname }}"
+domain: "avidandrew.com"
+port: 80
+www_root: "/var/www"
+php_root: "{{ www_root }}"
+php_tmp: "{{ php_root }}/tmp"
+php_max_execution_time: 30
+before_vhost: ""
+inside_vhost: ""
+php_config: php.ini.j2
+apache2_config: default.j2
+apache2_additional_packages: ""

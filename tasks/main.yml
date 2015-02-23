@@ -1,0 +1,28 @@
+---
+ - name: install required packages
+   apt: name={{ item }} update_cache=yes
+   when: ansible_os_family == "Debian"
+   with_items: apache2_packages
+
+ - name: install additional packages
+   apt: name={{ item }} update_cache=yes
+   when: ansible_os_family == "Debian"
+   with_items: apache2_additional_packages
+   when: apache2_additional_packages != ""
+
+ - name: create www-root
+   file: path={{ www_root }} owner=www-data group=www-data state=directory recurse=yes
+
+ - name: create php temp dir
+   file: path={{ php_tmp }} owner=www-data group=www-data state=directory recurse=yes
+
+ - name: copy apache2 config
+   template: src={{ apache2_config }} dest=/etc/apache2/sites-enabled/default.conf
+   notify: reload apache2
+
+ - name: make sure default apache2 config is absent
+   file: path=/etc/apache2/sites-enabled/000-default state=absent
+
+ - name: copy php.ini
+   template: src={{ php_config }} dest=/etc/php5/apache2/php.ini
+   notify: reload apache2

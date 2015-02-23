@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+
+{{ before_vhost }}
+
+<VirtualHost *:{{ port }}>
+    ServerName {{ apache2_hostname }}.{{ domain }}:{{ port }}
+
+    DocumentRoot {{ www_root }}
+
+    <Directory / >
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory {{ www_root }}>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+{{ inside_vhost }}
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+    LogLevel warn
+
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
