@@ -8,3 +8,5 @@ packages_ubuntu:
  - vim
  - aptitude
  - nfs-client
+ - rsync
+ - postfix
