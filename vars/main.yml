@@ -1,0 +1,2 @@
+---
+unattended_upgrades_template: "roles/servers/weblauncher-viewer/templates/50unattended-upgrades"

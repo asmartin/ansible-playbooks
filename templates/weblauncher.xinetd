@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+service weblauncher
+{
+	socket_type = stream
+	protocol = tcp
+	wait = no
+	user = amartin
+	server = /usr/local/bin/weblauncher.sh
+	port = 8023
+}

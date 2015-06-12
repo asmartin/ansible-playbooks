@@ -1,0 +1,92 @@
+---
+ - name: add google chrome repository key
+   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+ - name: add google chrome repository
+   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state=present
+
+ - name: add repository for HAL
+   apt_repository: repo="ppa:mjblenner/ppa-hal" state=present
+
+ - name: install viewer packages
+   apt: name={{ item }} state=present update_cache=yes
+   with_items:
+    - firefox
+    - python-software-properties
+    - ubuntu-restricted-extras
+    - xinetd
+    - libnotify-bin
+    - zenity
+    - udev
+    - libnss3
+    - chameleon-cursor-theme
+    - google-chrome-stable
+    - hal
+    - git
+    - x11vnc
+
+ - name: remove unwanted packages
+   apt: name={{ item }} state=absent
+   with_items:
+    - apport
+    - whoopsie
+    - update-manager
+
+ - name: download SimpleComputerRemote
+   get_url: url="{{ simplecomputeremote_url }}" dest="/tmp/SimpleComputerRemote.deb"
+   changed_when: False
+
+ - name: install SimpleComputerRemote
+   apt: deb="/tmp/SimpleComputerRemote.deb" state=present
+
+ - name: install xinetd service
+   template: src={{ item.src }} dest={{ item.dest }}
+   with_items:
+    - { src: services, dest: /etc/services }
+    - { src: weblauncher.xinetd, dest: /etc/xinetd.d/weblauncher }
+   notify: restart xinetd
+
+ - name: install websockify
+   git: repo=https://github.com/kanaka/websockify.git dest=/usr/share/websockify
+
+ - name: create websockify upstart job
+   template: src=websockify.upstart.j2 dest=/etc/init/websockify.conf
+   notify: restart websockify
+
+ - name: create x11vnc upstart job
+   template: src=x11vnc.upstart.j2 dest=/etc/init/x11vnc.conf
+   notify: restart x11vnc
+
+ - name: create autostart directory
+   file: path="/home/{{ viewer_user }}/.config/autostart" state=directory owner="{{ viewer_user }}" group="{{ viewer_user }}"
+
+ - name: disable light-locker
+   file: path="{{ item }}" state=absent
+   with_items:
+    - "/home/{{ viewer_user }}/.config/autostart/light-locker.desktop"
+    - /etc/xdg/autostart/light-locker.desktop
+ 
+ - name: copy files
+   template: src={{ item.src }} dest={{ item.dest }} owner={{ item.owner }} group={{ item.owner }}
+   with_items:
+    - { src: weblauncher.sudoers, dest: /etc/sudoers.d/weblauncher, owner: root }
+    - { src: desktop.conf, dest: "/home/{{ viewer_user }}/.config/lxsession/Lubuntu/desktop.conf", owner: "{{ viewer_user }}" }
+    - { src: simple-computer-remote.desktop, dest: "/home/{{ viewer_user }}/.config/autostart/simple-computer-remote.desktop", owner: "{{ viewer_user }}" }
+    - { src: xfce4-power-manager.xml, dest: "/home/{{ viewer_user }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-power-manager.xml", owner: "{{ viewer_user }}" }
+    - { src: xfce4-session.xml, dest: "/home/{{ viewer_user }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml", owner: "{{ viewer_user }}" }
+
+ - name: copy scripts
+   template: src={{ item }} dest="/usr/local/bin/{{ item }}" mode=755
+   with_items:
+    - weblauncher.sh
+    - enable-wakeup.sh
+    - select-resume-devices.sh
+
+ - name: create share folder
+   file: path={{ weblauncher_share_dir }} state=directory
+
+ - name: copy wallpaper
+   copy: src=weblauncher-wallpaper.png dest={{ weblauncher_share_dir }}/wallpaper.png
+
+ - name: set wallpaper
+   shell: su {{ viewer_user }} -c "export DISPLAY=:0 ; pcmanfm --set-wallpaper={{ weblauncher_share_dir }}/wallpaper.png"

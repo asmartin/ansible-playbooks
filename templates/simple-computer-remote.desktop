@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+[Desktop Entry] 
+Type=Application
+Exec=/opt/rekap/SimpleComputerRemote

@@ -1,0 +1,9 @@
+---
+ - name: restart xinetd
+   service: name=xinetd enabled=yes state=restarted
+
+ - name: restart websockify
+   service: name=websockify enabled=yes state=restarted
+
+ - name: restart x11vnc
+   service: name=x11vnc enabled=yes state=restarted

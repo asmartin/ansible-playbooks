@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- {{ ansible_managed }} -->
+
+<channel name="xfce4-power-manager" version="1.0">
+  <property name="xfce4-power-manager" type="empty">
+    <property name="power-button-action" type="empty"/>
+    <property name="lid-action-on-ac" type="uint" value="0"/>
+    <property name="dpms-on-ac-off" type="uint" value="0"/>
+    <property name="dpms-on-ac-sleep" type="uint" value="0"/>
+    <property name="brightness-on-ac" type="uint" value="9"/>
+    <property name="lock-screen-suspend-hibernate" type="bool" value="false"/>
+    <property name="logind-handle-lid-switch" type="bool" value="true"/>
+    <property name="dpms-on-battery-sleep" type="int" value="5"/>
+    <property name="dpms-enabled" type="bool" value="true"/>
+    <property name="dpms-on-battery-off" type="int" value="10"/>
+  </property>
+</channel>
