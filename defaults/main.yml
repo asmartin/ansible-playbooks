@@ -1,0 +1,8 @@
+---
+viewer_hostname: "localhost"
+server_repo: "http://git/git/amartin/weblauncher-server.git"
+apk_url: "http://avidandrew.com/downloads/WebLauncher.apk"
+
+links:
+ - { title: "Google", link: "http://www.google.com" }
+ - { title: "Avid Andrew", link: "http://avidandrew.com" }
