@@ -12,6 +12,7 @@
 
  - name: create www-root
    file: path={{ www_root }} owner=www-data group=www-data state=directory recurse=yes
+   when: create_www_root
 
  - name: create php temp dir
    file: path={{ php_tmp }} owner=www-data group=www-data state=directory recurse=yes
@@ -21,7 +22,10 @@
    notify: reload apache2
 
  - name: make sure default apache2 config is absent
-   file: path=/etc/apache2/sites-enabled/000-default state=absent
+   file: path="/etc/apache2/sites-enabled/{{ item }}" state=absent
+   with_items:
+    - 000-default
+    - 000-default.conf
 
  - name: copy php.ini
    template: src={{ php_config }} dest=/etc/php5/apache2/php.ini
