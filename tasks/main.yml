@@ -9,7 +9,7 @@
    apt_repository: repo="ppa:mjblenner/ppa-hal" state=present
 
  - name: install viewer packages
-   apt: name={{ item }} state=present update_cache=yes
+   apt: name={{ item }} state=latest update_cache=yes
    with_items:
     - firefox
     - python-software-properties
