@@ -3,10 +3,13 @@
    command: ls "{{ www_root }}/.git"
    register: ls
    failed_when: false
+   changed_when: false
 
  - name: clean up www before git checkout
    file: path="{{ www_root }}" state=absent
-   when: ls.rc != 0 
+   when: ls.rc != 0 and clean_www_root
+   tags:
+    - not_in_dry_run
 
  - name: deploy app to www-root
    git: repo="{{ server_repo }}" force=yes dest="{{ www_root }}" accept_hostkey=yes
