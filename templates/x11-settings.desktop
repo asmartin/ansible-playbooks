@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+[Desktop Entry] 
+Type=Application
+Exec=/usr/local/bin/disable-x11-blanking.sh
