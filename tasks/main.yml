@@ -25,6 +25,18 @@
     - git
     - x11vnc
 
+ - name: install pulseaudio
+   apt: name=pavucontrol state=latest
+   when: use_pulseaudio
+
+ - name: remove pulseaudio
+   apt: name={{ item }} state=absent
+   when: not use_pulseaudio
+   with_items:
+    - pulseaudio
+    - rtkit
+    - pavucontrol
+
  - name: remove unwanted packages
    apt: name={{ item }} state=absent
    with_items:

@@ -12,3 +12,5 @@ chrome_sites: "google.com|gmail.com|netflix.com"
 firefox_sites: "mozilla.org|amazon.com"
 
 simplecomputeremote_url: "https://philproctor.github.io/SimpleComputerRemote/downloads/simplecomputerremote_1.2_i386.deb"
+
+use_pulseaudio: true

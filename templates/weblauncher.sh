@@ -28,7 +28,7 @@ function log() {
 function launch_chrome() {
 	sed -i 's/"exit_type": "Crashed"/"exit_type": "Normal"/' ~/.config/chromium/Default/Preferences
 	sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
-	google-chrome --ssl-version-min=tls1 --kiosk --disable-restore-session-state $1 &
+	google-chrome --ssl-version-min=tls1 --kiosk --ignore-gpu-blacklist --disable-restore-session-state $1 &
 }
 
 function launch_firefox() {
