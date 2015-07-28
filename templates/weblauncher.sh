@@ -35,6 +35,25 @@ function launch_firefox() {
 	firefox $1 &
 }
 
+function kill_browsers() {
+	close_wait=0
+	max_wait=6
+
+	# initially try to kill gracefully
+	killall chrome firefox
+	ps aux | grep -qE '[c]hrome|[f]irefox'
+	while [ $? -eq 0 ] && [ $close_wait -lt $max_wait ]; do
+		# wait for chrome and firefox to have closed
+		sleep 0.5
+		let close_wait=close_wait+1
+		ps aux | grep -qE '[c]hrome|[f]irefox'
+	done
+	if [ $close_wait -eq $max_wait ]; then
+		# forcefully kill chrome and firefox since they won't gracefully close
+		killall -9 chrome firefox
+	fi
+}
+
 link=$(readstdin)
 
 # set DISPLAY
@@ -43,6 +62,7 @@ export DISPLAY=:0.0
 if [ "$link" == "reboot" ]; then
 	sudo reboot
 elif [ "$link" == "sleep" ]; then
+	kill_browsers
 	sudo dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend > /dev/null 2>&1
 	exit 0
 elif [ "$link" == "services" ]; then
@@ -54,8 +74,7 @@ elif [ "$link" == "services" ]; then
 	nohup /opt/rekap/SimpleComputerRemote & disown
 	exit 0
 elif [ "$link" == "close" ]; then
-	killall chrome
-	killall firefox
+	kill_browsers
 	exit 0
 fi
 
@@ -72,20 +91,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # kill any existing browser processes
-killall chrome firefox
-CLOSE_WAIT=0
-MAX_WAIT=6
-ps aux | grep -qE '[c]hrome|[f]irefox'
-while [ $? -eq 0 ] && [ $CLOSE_WAIT -lt $MAX_WAIT ]; do
-	# wait for chrome and firefox to have closed
-	sleep 0.5
-	let CLOSE_WAIT=CLOSE_WAIT+1
-	ps aux | grep -qE '[c]hrome|[f]irefox'
-done
-if [ $CLOSE_WAIT -eq $MAX_WAIT ]; then
-	# forcefully kill chrome and firefox since they won't gracefully close
-	killall -9 chrome firefox
-fi
+kill_browsers
 
 echo "$link" | grep -qiE "$FIREFOX_SITES_REGEX"
 if [ $? -eq 0 ]; then
