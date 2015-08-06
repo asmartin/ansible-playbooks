@@ -16,6 +16,9 @@
    tags:
     - config
 
+ - name: make sure www-root/html doesn't exist
+   file: path="{{ www_root }}/html" state=absent
+
  - name: generate config.php
    template: src=config.php dest="{{ www_root }}/config.php" owner=www-data group=www-data
    tags:
