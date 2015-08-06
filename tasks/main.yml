@@ -95,8 +95,12 @@
    template: src={{ item }} dest="/usr/local/bin/{{ item }}" mode=755
    with_items:
     - weblauncher.sh
+    - sleeper.sh
     - enable-wakeup.sh
     - select-resume-devices.sh
+
+ - name: schedule sleeper cron
+   cron: name="sleeper.sh" job=/usr/local/bin/sleeper.sh
 
  - name: create share folder
    file: path={{ weblauncher_share_dir }} state=directory
