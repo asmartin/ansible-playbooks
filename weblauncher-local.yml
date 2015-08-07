@@ -1,0 +1,19 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  roles:
+   - common
+   - weblauncher/viewer
+   - weblauncher/server
+
+  vars:
+   - viewer_user: "myuser"
+   - viewer_hostname: "{{ ansible_hostname }}"
+   - clean_www_root: true
+   - notification_email: "you@example.com"
+   - links:
+      - { title: "Flickr - Recent", link: "https://www.flickr.com/explore" }
+      - { title: "My 500px", link: "https://500px.com/garibaldi" }
+      - { title: "New York Times", link: "http://www.nytimes.com/" }
+      - { title: "Reddit - Technology", link: "https://www.reddit.com/r/technology" }
+      - { title: "YouTube - Rick Roll", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
