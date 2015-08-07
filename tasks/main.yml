@@ -1,0 +1,54 @@
+---
+ - name: install common packages (Arch)
+   pacman: name={{ item }} update_cache=yes
+   with_items: packages_arch
+   when: ansible_os_family == "Archlinux"
+
+ - name: install common packages (Ubuntu)
+   apt: name={{ item }} update_cache=yes
+   with_items: packages_ubuntu
+   when: ansible_os_family == "Debian"
+
+ - name: remove unwanted packages (Ubuntu)
+   apt: name={{ item }} state=absent
+   with_items: packages_removed_ubuntu
+   when: ansible_os_family == "Debian"
+
+ - name: add amartin@garibaldi's authorized key
+   authorized_key: user=root key="{{ item }}"
+   with_file:
+    - amartin.pub
+
+ - name: install smartmontools
+   apt: name=smartmontools update_cache=yes
+   when: ansible_virtualization_role != "guest"
+
+ - name: setup smart to monitor drives
+   template: src={{ item.src }} dest={{ item.dest }}
+   with_items:
+    - { src: smartmontools.j2, dest: /etc/default/smartmontools }
+    - { src: smartd.conf.j2, dest: /etc/smartd.conf }
+   when: ansible_virtualization_role != "guest"
+   notify: restart smartmontools
+
+ - name: check if mdadm is installed
+   command: /usr/bin/which mdadm
+   ignore_errors: True
+   changed_when: False
+   register: mdadm_check
+
+ - name: monitor raid arrays
+   cron: name="monitor raid arrays" minute="1" job="{{ mdadm_check.stdout }} --monitor --scan --mail={{ notification_email }} -1"
+   when: mdadm_check.rc == 0
+   tags:
+    - not_in_dry_run
+
+ - name: configure postfix
+   template: src={{ postfix_config }} dest=/etc/postfix/main.cf
+   notify: restart postfix
+
+ - name: enable unattended-upgrades
+   template: src={{ item.src }} dest={{ item.dest }}
+   with_items:
+    - { src: 20auto_upgrades.j2, dest: /etc/apt/apt.conf.d/20auto-upgrades }
+    - { src: "{{ unattended_upgrades_template }}", dest: /etc/apt/apt.conf.d/50unattended-upgrades }

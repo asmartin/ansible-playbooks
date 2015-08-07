@@ -1,0 +1,6 @@
+---
+ - name: restart smartmontools
+   service: name=smartmontools state=restarted enabled=yes sleep=5
+
+ - name: restart postfix
+   service: name=postfix state=restarted enabled=yes

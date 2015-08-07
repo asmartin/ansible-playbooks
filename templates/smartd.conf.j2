@@ -1,0 +1,24 @@
+# /etc/smartd.conf
+# {{ ansible_managed }}
+# Configuration file for smartd. Use "man smartd.conf" for more information.
+
+# Home page is: http://smartmontools.sourceforge.net
+
+# smartd will re-read the configuration file if it receives a HUP
+# signal
+
+# The file gives a list of devices to monitor using smartd, with one
+# device per line. Text after a hash (#) is ignored, and you may use
+# spaces and tabs for white space. You may use '\' to continue lines.
+
+# You can usually identify which hard disks are on your system by
+# looking in /proc/ide and in /proc/scsi.
+
+# The word DEVICESCAN will cause any remaining lines in this
+# configuration file to be ignored: it tells smartd to scan for all
+# ATA and SCSI devices.  DEVICESCAN may be followed by any of the
+# Directives listed below, which will be applied to all devices that
+# are found.  Most users should comment out DEVICESCAN and explicitly
+# list the devices that they wish to monitor.
+
+DEVICESCAN -H -l error -l selftest -f -m {{ notification_email }}
