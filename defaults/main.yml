@@ -24,3 +24,4 @@ packages_removed_ubuntu:
 postfix_config: "postfix_main.cf.j2"
 postfix_interfaces: "loopback-only"
 unattended_upgrades_template: "50unattended_upgrades.j2"
+notification_email: "root@localhost.localdomain"
