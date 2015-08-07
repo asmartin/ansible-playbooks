@@ -2,6 +2,9 @@
 viewer_user: "viewer"
 weblauncher_share_dir: /usr/share/weblauncher
 
+# do not change, must match value in index.php in weblauncher-server
+websockify_port: 5901
+
 # set to "chrome" or "firefox" to prefer one browser over the other
 preferred_browser: "chrome"
 
