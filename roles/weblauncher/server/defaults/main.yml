@@ -1,7 +1,7 @@
 ---
 viewer_hostname: "localhost"
 www_root: /var/www
-server_repo: "http://git/git/amartin/weblauncher-server.git"
+server_repo: "https://github.com/asmartin/weblauncher-server.git"
 apk_url: "http://avidandrew.com/downloads/WebLauncher.apk"
 
 # set to true to remove all contents of the www_root prior to deploying the app
