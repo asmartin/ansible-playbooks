@@ -1,2 +1,2 @@
 ---
-unattended_upgrades_template: "roles/servers/weblauncher-viewer/templates/50unattended-upgrades"
+unattended_upgrades_template: "roles/weblauncher/viewer/templates/50unattended-upgrades"

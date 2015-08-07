@@ -50,6 +50,8 @@
 
  - name: install SimpleComputerRemote
    apt: deb="/tmp/SimpleComputerRemote.deb" state=present
+   tags:
+    - not_in_dry_run
 
  - name: install xinetd service
    template: src={{ item.src }} dest={{ item.dest }}
