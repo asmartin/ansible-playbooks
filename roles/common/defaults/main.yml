@@ -25,3 +25,6 @@ postfix_config: "postfix_main.cf.j2"
 postfix_interfaces: "loopback-only"
 unattended_upgrades_template: "50unattended_upgrades.j2"
 notification_email: "root@localhost.localdomain"
+
+# place your public SSH key here (or override in group_vars/all)
+public_key: ""

@@ -14,10 +14,9 @@
    with_items: packages_removed_ubuntu
    when: ansible_os_family == "Debian"
 
- - name: add amartin@garibaldi's authorized key
-   authorized_key: user=root key="{{ item }}"
-   with_file:
-    - amartin.pub
+ - name: add authorized key
+   authorized_key: user=root key="{{ public_key }}"
+   when: public_key != ""
 
  - name: install smartmontools
    apt: name=smartmontools update_cache=yes
