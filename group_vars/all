@@ -1,0 +1,30 @@
+---
+# set to 'true' if you have run the "storage" playbook and want to store user data on it rather
+# than on each individual server or container
+use_nas: true
+
+# if you set "use_nas" to true, set this to the hostname of the server where you
+# ran the "storage" playbook
+nas_hostname: "nas"
+
+# the path to the storage directory (e.g. RAID array on the "storage" server)
+storage_path: /mnt/storage
+
+# path to the directory for storing user data from servers or containers
+container_path: "{{ storage_path }}/containers"
+
+# path to the directory for storing backups
+backup_path: "{{ storage_path }}/backups"
+
+# path to the directory on the server where the "storage" playbook was run where each server
+# can store its user data; in this example, the "storage" playbook was run on a server called "nas"
+nas_mount_base: "nas:{{ container_path }}/{{ ansible_hostname }}"
+
+# the domain (TLD) that your network uses
+domain: "avidandrew.com"
+
+# the email address where notifications should be sent
+notification_email: "you@example.com"
+
+# your public SSH key (generate with "ssh-keygen -t rsa" and then find it in ~/.ssh/id_rsa.pub)
+public_key: ""
