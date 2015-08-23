@@ -1,0 +1,3 @@
+---
+ - name: mount nfs export
+   mount: src="{{ src }}" name="{{ dest }}" state="{{ state }}" opts="{{ opts }}" fstype="{{ fstype }}"

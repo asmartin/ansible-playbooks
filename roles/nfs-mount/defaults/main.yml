@@ -1,0 +1,6 @@
+---
+src: "nas:/mnt/storage/container"
+dest: "/srv"
+opts: "defaults"
+state: "mounted"
+fstype: "nfs"
