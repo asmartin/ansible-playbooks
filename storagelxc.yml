@@ -1,0 +1,11 @@
+---
+- hosts: 'nas'
+  remote_user: root
+  roles:
+   - common
+   - storage
+   - lxc
+
+  vars:
+   - installed_with_storage: true
+   - lxc_backup: "{{ backup_path }}/{{ ansible_hostname }}"

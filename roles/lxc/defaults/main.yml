@@ -1,0 +1,16 @@
+---
+
+# these values determine if we need to mount an NFS share for the backup dir or not
+#  - situation 1: this playbook is run on the same host as the "storage" playbook (recommended), 
+#    in which case set 'installed_with_storage' to true and 'lxc_backup' to wherever you 
+#    want the VMs to be backed up to on the "storage" host itself. For example, you can use
+#    `{{ backup_path }}/{{ ansible_hostname }}`, see README.md for details
+#  - situation 2: this playbook is run on a different host as the "storage" playbook,
+#    in which case set 'installed_with_storage' to false and leave the 'lxc_backup' value
+#    as-is below. Note that before running this playbook, make sure the directory for
+#    this playbooks hostname exists in the 'container_path' on the "storage" server
+installed_with_storage: false
+lxc_backup: /mnt/backup
+
+# set to false to skip configuring /etc/network/interfaces
+lxc_configure_network: true
