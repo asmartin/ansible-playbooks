@@ -1,0 +1,12 @@
+---
+# see group_vars/all for additional variables that can be overridden
+
+storage_packages_ubuntu:
+ - nfs-kernel-server
+
+storage_clients: "*"
+container_clients: "*"
+
+# uid and gid of the local user whose account should be used for anonymous mounts
+anonuid: 1000
+anongid: 1000

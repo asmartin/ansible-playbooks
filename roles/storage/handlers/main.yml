@@ -1,0 +1,3 @@
+---
+ - name: reload nfs exports
+   command: /usr/sbin/exportfs -r

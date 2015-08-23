@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+/mnt/storage    {{ storage_clients }}(rw,root_squash,no_subtree_check,anonuid={{ anonuid }},anongid={{ anongid }},fsid=2)
+
+/mnt/storage/containers    {{ container_clients }}(rw,no_root_squash,no_subtree_check,fsid=3)

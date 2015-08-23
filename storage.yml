@@ -1,0 +1,6 @@
+---
+- hosts: 'storagehost'
+  remote_user: root
+  roles:
+   - common
+   - storage

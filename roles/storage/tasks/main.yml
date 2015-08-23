@@ -1,0 +1,16 @@
+---
+ - name: install required packages (Ubuntu)
+   apt: name={{ item }} update_cache=yes
+   when: ansible_os_family == "Debian"
+   with_items: storage_packages_ubuntu
+
+ - name: make sure storage root exists
+   file: path={{ item }} state=directory
+   with_items:
+    - "{{ storage_path }}"
+    - "{{ container_path }}"
+
+ - name: set /etc/exportfs
+   template: src=exports.j2 dest=/etc/exports
+   notify: reload nfs exports
+
