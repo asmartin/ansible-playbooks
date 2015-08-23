@@ -1,0 +1,6 @@
+---
+- hosts: 'git'
+  remote_user: root
+  roles:
+   - common
+   - git

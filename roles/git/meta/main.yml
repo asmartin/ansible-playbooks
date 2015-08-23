@@ -1,0 +1,3 @@
+---
+dependencies:
+ - { role: nfs-mount, src: "{{ nas_mount_base }}/gitbucket_home", dest: "{{ gitbucket_home }}", opts: "defaults,nfsvers=3", when: use_nas }

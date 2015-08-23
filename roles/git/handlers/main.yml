@@ -1,0 +1,3 @@
+---
+ - name: restart gitbucket
+   service: name=gitbucket state=restarted enabled=yes
