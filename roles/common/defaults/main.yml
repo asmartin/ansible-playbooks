@@ -13,6 +13,9 @@ packages_ubuntu:
  - bsd-mailx
  - ntp
  - unattended-upgrades
+ - fail2ban
+ - lsof
+ - strace
 
 packages_removed_ubuntu:
  - whoopsie

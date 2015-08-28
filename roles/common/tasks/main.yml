@@ -18,6 +18,10 @@
    authorized_key: user=root key="{{ public_key }}"
    when: public_key != ""
 
+ - name: remove ubuntu user
+   user: name=ubuntu state=absent
+   when: public_key != ""
+
  - name: install smartmontools
    apt: name=smartmontools update_cache=yes
    when: ansible_virtualization_role != "guest"
