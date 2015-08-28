@@ -33,6 +33,10 @@
    notify: restart networking
    when: lxc_configure_network
 
+ - name: configure apparmor
+   template: src=container-base.j2 dest=/etc/apparmor.d/abstractions/lxc/container-base
+   notify: restart apparmor
+
  - name: make sure lxc backup directory exists
    file: path="{{ lxc_backup }}" state=directory
 

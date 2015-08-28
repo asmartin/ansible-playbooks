@@ -2,6 +2,9 @@
  - name: restart networking
    shell: "ifdown eth0 ; ifup eth0"
 
+ - name: restart apparmor
+   service: name=apparmor state=restarted
+
  - name: restart lxc
    service: name=lxc state=restarted enabled=yes
 
