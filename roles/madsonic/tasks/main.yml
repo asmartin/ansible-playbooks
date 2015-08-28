@@ -1,6 +1,6 @@
 ---
  - name: Add Oracle Java PPA
-   apt_repository: repo="ppa:webupd8team/java"
+   apt_repository: repo="ppa:webupd8team/java" validate_certs=False
 
  - name: Automatically select the Oracle License
    shell: echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
@@ -21,6 +21,7 @@
 
  - name: set permissions on music directory
    file: path={{ madsonic_music_dir }} owner=madsonic recurse=true state=directory
+   failed_when: false
 
  - name: set madsonic settings
    template: src=madsonic.j2 dest=/etc/default/madsonic
