@@ -46,6 +46,9 @@
    tags:
     - not_in_dry_run
 
+ - name: configure /etc/mailname
+   template: src=mailname.j2 dest=/etc/mailname
+
  - name: configure postfix
    template: src={{ postfix_config }} dest=/etc/postfix/main.cf
    notify: restart postfix
