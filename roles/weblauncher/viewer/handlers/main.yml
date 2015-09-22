@@ -7,3 +7,6 @@
 
  - name: restart x11vnc
    service: name=x11vnc enabled=yes state=restarted
+
+ - name: restart HAL
+   service: name=hal enabled=yes state=restarted

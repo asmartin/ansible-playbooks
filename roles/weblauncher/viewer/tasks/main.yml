@@ -44,6 +44,10 @@
     - whoopsie
     - update-manager
 
+ - name: install HAL upstart job
+   template: src=hal.conf dest=/etc/init/hal.conf
+   notify: restart HAL
+
  - name: download SimpleComputerRemote
    get_url: url="{{ simplecomputeremote_url }}" dest="/tmp/SimpleComputerRemote.deb"
    changed_when: False

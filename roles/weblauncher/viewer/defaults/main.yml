@@ -12,7 +12,7 @@ preferred_browser: "chrome"
 chrome_sites: "google.com|gmail.com|netflix.com|amazon.com"
 
 # pipe-separated list of sites that work better on firefox
-firefox_sites: "mozilla.org"
+firefox_sites: "mozilla.org|hulu.com"
 
 sleep_timer: /tmp/sleep
 
