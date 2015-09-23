@@ -1,4 +1,3 @@
 ---
 dependencies:
  - { role: apache2 }
-# - { role: nfs-mount, src: "{{ axe_mount_base }}/www", dest: "{{ www_root }}", opts: "defaults,nfsvers=3" }
