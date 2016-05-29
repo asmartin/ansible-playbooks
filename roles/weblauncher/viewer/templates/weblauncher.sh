@@ -72,7 +72,13 @@ function notify() {
 function sleep_now() {
 	notify "Sleeping Now" "Putting the Viewer into sleep mode now..."
 	kill_browsers
-	sudo dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend > /dev/null 2>&1
+        if pidof systemd > /dev/null 2>&1; then
+		# xenial and later
+                sudo systemctl suspend
+        else
+		# trusty and earlier
+		sudo dbus-send --system --print-reply --dest=org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.Suspend > /dev/null 2>&1
+	fi
 	exit 0
 }
 

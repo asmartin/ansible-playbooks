@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=HAL daemon
+After=syslog.target
+
+[Service]
+ExecStart=/usr/sbin/hald --daemon=no --use-syslog
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

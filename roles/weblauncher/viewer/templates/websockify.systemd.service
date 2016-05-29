@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Websockify VNC proxy server
+After=syslog.target
+
+[Service]
+ExecStart=/usr/share/websockify/websockify.py {{ websockify_port }} localhost:5900
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

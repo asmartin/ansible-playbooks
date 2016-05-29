@@ -3,7 +3,7 @@
    apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub
 
  - name: add google chrome repository
-   apt_repository: repo="deb http://dl.google.com/linux/chrome/deb/ stable main" state=present
+   apt_repository: repo="deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" state=present
 
  - name: add repository for HAL
    apt_repository: repo="ppa:mjblenner/ppa-hal" state=present
@@ -21,9 +21,13 @@
     - libnss3
     - chameleon-cursor-theme
     - google-chrome-stable
-    - hal
     - git
     - x11vnc
+    - preload
+
+   # a separate task since we want state=present, not state=latest
+ - name: install hal
+   apt: name=hal state=present
 
  - name: install pulseaudio
    apt: name=pavucontrol state=latest
@@ -45,7 +49,13 @@
     - update-manager
 
  - name: install HAL upstart job
-   template: src=hal.conf dest=/etc/init/hal.conf
+   template: src=hal.upstart.conf dest=/etc/init/hal.conf
+   when: ansible_distribution_release == "trusty"
+   notify: restart HAL
+
+ - name: install HAL systemd unit
+   template: src=hal.systemd.service dest=/etc/systemd/system/hal.service
+   when: ansible_distribution_release != "trusty"
    notify: restart HAL
 
  - name: download SimpleComputerRemote
@@ -69,10 +79,22 @@
 
  - name: create websockify upstart job
    template: src=websockify.upstart.j2 dest=/etc/init/websockify.conf
+   when: ansible_distribution_release == "trusty"
+   notify: restart websockify
+
+ - name: create websockify systemd unit
+   template: src=websockify.systemd.service dest=/etc/systemd/system/websockify.service
+   when: ansible_distribution_release != "trusty"
    notify: restart websockify
 
  - name: create x11vnc upstart job
    template: src=x11vnc.upstart.j2 dest=/etc/init/x11vnc.conf
+   when: ansible_distribution_release == "trusty"
+   notify: restart x11vnc
+
+ - name: create x11vnc systemd unit
+   template: src=x11vnc.systemd.service dest=/etc/systemd/system/x11vnc.service
+   when: ansible_distribution_release != "trusty"
    notify: restart x11vnc
 
  - name: create autostart directory
@@ -86,6 +108,11 @@
  
  - name: disable X11 screen blanking
    template: src=disable-x11-blanking.sh dest=/usr/local/bin/disable-x11-blanking.sh mode=0755
+
+ - name: create directories
+   file: path="{{ item }}" state=directory
+   with_items:
+    - "/home/{{ viewer_user }}/.config/xfce4/xfconf/xfce-perchannel-xml"
 
  - name: copy files
    template: src={{ item.src }} dest={{ item.dest }} owner={{ item.owner }} group={{ item.owner }}
@@ -115,4 +142,11 @@
    copy: src=weblauncher-wallpaper.png dest={{ weblauncher_share_dir }}/wallpaper.png
 
  - name: set wallpaper
-   shell: su {{ viewer_user }} -c "export DISPLAY=:0 ; pcmanfm --set-wallpaper={{ weblauncher_share_dir }}/wallpaper.png"
+   become: yes
+   become_user: "{{ viewer_user }}"
+   shell: export DISPLAY=:0 ; pcmanfm --set-wallpaper={{ weblauncher_share_dir }}/wallpaper.png
+
+ - name: fix pulseaudio resume from sleep
+   template: src=resume-fix-pulseaudio.service dest=/etc/systemd/system/resume-fix-pulseaudio.service
+   notify: enable puseaudio fix
+   when: fix_pulseaudio_suspend
