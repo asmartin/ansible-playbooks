@@ -4,6 +4,7 @@ either as separate containers or virtual machines, including:
 
 -    [Web Launcher](http://avidandrew.com/pages/weblauncher.html) - an elegant tool for launching your favorite webpages on a remote computer
 -    storage - an NFS fileserver (NAS), run the `storage.yml` playbook (or if running with LXC, the recommended configuration, run the `storagelxc.yml` playbook)
+-    apache2 - configure the apache2 webserver with PHP for hosting websites
 -    lxc - an LXC container host with the [LXC Web Panel](https://github.com/claudyus/LXC-Web-Panel)
     -    before installation, determine if this playbook is going to be run on the same host as the `storage` playbook. If so, run the `storagelxc.yml` playbook
          rather than `lxc.yml`
