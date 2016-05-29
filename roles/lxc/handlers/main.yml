@@ -1,7 +1,4 @@
 ---
- - name: restart networking
-   shell: "ifdown eth0 ; ifup eth0"
-
  - name: restart apparmor
    service: name=apparmor state=restarted
 

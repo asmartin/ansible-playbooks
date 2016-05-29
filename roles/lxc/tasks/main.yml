@@ -1,6 +1,6 @@
 ---
  - name: add lwp apt key
-   apt_key: url="https://packagecloud.io/gpg.key"
+   apt_key: url="https://packagecloud.io/gpg.key" validate_certs=False
 
  - name: add repositories
    apt_repository: repo="{{ item }}"
@@ -27,11 +27,6 @@
     - python-pam
     - bridge-utils
     - nmap
-
- - name: configure network interfaces
-   template: src=interfaces.j2 dest=/etc/network/interfaces
-   notify: restart networking
-   when: lxc_configure_network
 
  - name: configure apparmor
    template: src=container-base.j2 dest=/etc/apparmor.d/abstractions/lxc/container-base
