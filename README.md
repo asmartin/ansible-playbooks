@@ -8,7 +8,8 @@ either as separate containers or virtual machines, including:
     -    before installation, determine if this playbook is going to be run on the same host as the `storage` playbook. If so, run the `storagelxc.yml` playbook
          rather than `lxc.yml`
     -    after running this playbook for the first time, reboot the server to apply the necessary networking changes
--    git - sets up [Gitbucket](https://takezoe.github.io/gitbucket/), a Github clone, to create your own private or local git repository hosting. Note that the default credentials to login to the Gitbucket web interface are `root` and `root` (username and password respectively). Note: the initial run of this service will take several minutes before the web interface is accessible while the application is extracted (even after the playbook finishes).
+-    gogs - sets up [Gogs](https://gogs.io/), a Github clone, to create your own private or local git repository hosting. Note that `gogs` is recommended over `gitbucket` due to better performance
+-    gitbucket - sets up [Gitbucket](https://takezoe.github.io/gitbucket/), a Github clone, to create your own private or local git repository hosting. Note that the default credentials to login to the Gitbucket web interface are `root` and `root` (username and password respectively). Note: the initial run of this service will take several minutes before the web interface is accessible while the application is extracted (even after the playbook finishes).
 -    madsonic - sets up the [Madsonic](http://www.madsonic.org/) music and video streamer for streaming your music collection to your browser or smartphone. Note: the initial run of this service will take several minute
 s before the web interface is accessible while the application is extracted (even after the playbook finishes).
 
