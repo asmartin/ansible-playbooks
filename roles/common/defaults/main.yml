@@ -2,6 +2,8 @@
 packages_arch:
  - tmux
  - vim
+ - postfix
+ - openssh
 
 packages_ubuntu:
  - tmux
@@ -16,6 +18,8 @@ packages_ubuntu:
  - fail2ban
  - lsof
  - strace
+ - atop
+ - wget
 
 packages_removed_ubuntu:
  - whoopsie
@@ -23,6 +27,7 @@ packages_removed_ubuntu:
  - apport-hooks-medibuntu
  - apport-symptoms
  - python-apport
+ - mlocate
 
 postfix_config: "postfix_main.cf.j2"
 postfix_interfaces: "loopback-only"
