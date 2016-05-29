@@ -2,13 +2,26 @@
  - name: install required packages
    apt: name={{ item }} update_cache=yes
    when: ansible_os_family == "Debian"
-   with_items: apache2_packages
+   with_items: "{{ apache2_packages }}"
+
+ - name: install trusty packages
+   apt: name={{ item }}
+   when: ansible_distribution_release == "trusty"
+   with_items:
+    - libapache2-mod-php5
+    - php5-gd
+
+ - name: install xenial packages
+   apt: name={{ item }}
+   when: ansible_distribution_release != "trusty"
+   with_items:
+    - libapache2-mod-php
+    - php-gd
 
  - name: install additional packages
    apt: name={{ item }} update_cache=yes
-   when: ansible_os_family == "Debian"
-   with_items: apache2_additional_packages
-   when: apache2_additional_packages != ""
+   when: ansible_os_family == "Debian" and apache2_additional_packages != ""
+   with_items: "{{ apache2_additional_packages }}"
 
  - name: create www-root
    file: path={{ www_root }} owner=www-data group=www-data state=directory recurse=yes
@@ -28,5 +41,10 @@
     - 000-default.conf
 
  - name: copy php.ini
-   template: src={{ php_config }} dest=/etc/php5/apache2/php.ini
+   template: src={{ php_config }} dest=/etc/{{ (ansible_distribution_release == "trusty") | ternary("php5", "php/7.0") }}/apache2/php.ini
    notify: reload apache2
+
+ - name: enable apache2 modules
+   apache2_module: name={{ item }} state=present
+   with_items: "{{ apache2_modules }}"
+   notify: restart apache2
