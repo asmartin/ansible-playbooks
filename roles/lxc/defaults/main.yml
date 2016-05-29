@@ -12,5 +12,5 @@
 installed_with_storage: false
 lxc_backup: /mnt/backup
 
-# set to false to skip configuring /etc/network/interfaces
+# set to false to skip configuring /etc/network/interfaces and iptables
 lxc_configure_network: true
