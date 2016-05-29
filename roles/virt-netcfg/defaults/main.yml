@@ -1,0 +1,16 @@
+---
+iptables_file: /etc/network/iptables.rules
+
+primary_interface: |
+ auto br0
+ iface br0 inet dhcp
+         bridge_ports eth0
+
+# overload to add additional interfaces (e.g. eth1, br1, etc)
+additional_interfaces: ""
+
+# overload with custom iptables rules (output from iptables-save)
+# note: if you overload this, you must overload primary_interface
+# to add "pre-up iptables-restore < {{ iptables_file }}" to the 
+# primary interface to load the rules
+iptables_rules: ""

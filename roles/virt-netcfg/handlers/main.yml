@@ -1,0 +1,6 @@
+---
+ - name: restart networking
+   shell: "ifdown eth0 ; ifup eth0"
+
+ - name: reload iptables
+   shell: /sbin/iptables-restore < {{ iptables_file }}
