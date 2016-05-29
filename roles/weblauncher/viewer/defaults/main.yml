@@ -12,10 +12,14 @@ preferred_browser: "chrome"
 chrome_sites: "google.com|gmail.com|netflix.com|amazon.com"
 
 # pipe-separated list of sites that work better on firefox
-firefox_sites: "mozilla.org|hulu.com"
+firefox_sites: "mozilla.org|hulu.com|acorn.tv"
 
 sleep_timer: /tmp/sleep
 
 simplecomputeremote_url: "https://philproctor.github.io/SimpleComputerRemote/downloads/simplecomputerremote_1.2_i386.deb"
 
 use_pulseaudio: true
+
+# a graphics driver bug sometimes prevents audio from working after suspend
+# enable this to install a workaround for this problem (xenial or newer only)
+fix_pulseaudio_suspend: false

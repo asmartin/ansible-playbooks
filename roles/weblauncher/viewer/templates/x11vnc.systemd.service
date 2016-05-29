@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=x11vnc server
+After=display-manager.service
+
+[Service]
+ExecStart=/usr/bin/x11vnc -forever -display :0 -auth guess -scale 800x600
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

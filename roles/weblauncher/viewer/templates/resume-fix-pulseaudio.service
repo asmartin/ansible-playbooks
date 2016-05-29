@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Fix PulseAudio after resume from suspend
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart lightdm
+
+[Install]
+WantedBy=suspend.target

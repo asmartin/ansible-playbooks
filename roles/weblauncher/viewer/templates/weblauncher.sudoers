@@ -1,2 +1,2 @@
 # {{ ansible_managed }}
-%sudo ALL=NOPASSWD: /sbin/reboot, /usr/bin/dbus-send, /sbin/start, /sbin/stop, /usr/sbin/service
+%sudo ALL=NOPASSWD: /sbin/reboot, /usr/bin/dbus-send, /sbin/start, /sbin/stop, /usr/sbin/service, /bin/systemctl suspend
