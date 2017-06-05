@@ -1,0 +1,69 @@
+---
+admin_email: "webmaster@localhost"
+www_permissions: "0755"
+www_root: "/var/www"
+www_root_owner: "www-data"
+www_root_group: "www-data"
+protect_hidden_files: True
+client_max_body_size: "100M"
+
+### PHP ###
+php_version: "{{ (ansible_distribution_release == 'trusty') | ternary('php5', 'php7.0') }}"
+php_conf_dir: "{{ (ansible_distribution_release == 'trusty') | ternary('/etc/php5', '/etc/php/7.0') }}"
+php_ini_template: "php_ini.j2"
+php_pool: "www.conf.j2"
+php_root: "{{ www_root }}"
+default_php_disable_functions:
+ - pcntl_alarm
+ - pcntl_fork
+ - pcntl_waitpid
+ - pcntl_wait
+ - pcntl_wifexited
+ - pcntl_wifstopped
+ - pcntl_wifsignaled
+ - pcntl_wexitstatus
+ - pcntl_wtermsig
+ - pcntl_wstopsig
+ - pcntl_signal
+ - pcntl_signal_dispatch
+ - pcntl_get_last_error
+ - pcntl_strerror
+ - pcntl_sigprocmask
+ - pcntl_sigwaitinfo
+ - pcntl_sigtimedwait
+ - pcntl_exec
+ - pcntl_getpriority
+ - pcntl_setpriority
+ - exec
+ - passthru
+ - shell_exec
+ - system
+ - proc_open
+ - popen
+ - curl_exec
+ - curl_multi_exec
+ - parse_ini_file
+ - show_source
+ - ini_set
+
+php_disable_functions: "{{ default_php_disable_functions | difference(my_php_enable_functions|default([])) | join(',') }}"
+
+php_ini:
+  max_execution_time: 30
+  max_input_time: 60
+  memory_limit: 128M
+  upload_max_filesize: "{{ client_max_body_size }}"
+  post_max_size: "{{ client_max_body_size }}"
+  file_uploads: On
+  upload_tmp_dir: "{{ php_root }}/tmp"
+  max_file_uploads: 20
+  allow_url_fopen: Off
+  session_save_path: "{{ php_root }}/tmp"
+  open_basedir: "{{ php_root }}"
+
+### SITE CONFIGS ###
+sites:
+ - site_name: "localhost.localdomain"
+   php: False
+   ssl: True
+   extra_directives: []
