@@ -1,6 +1,6 @@
 ---
  - name: install required packages
-   apt: name={{ item }} update_cache=yes state=latest
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}" state=latest
    when: ansible_os_family == "Debian"
    tags: not_in_dry_run
    with_items:
