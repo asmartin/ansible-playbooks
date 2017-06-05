@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+path-exclude /usr/share/doc/*
+# we need to keep copyright files for legal reasons
+path-include /usr/share/doc/*/copyright
