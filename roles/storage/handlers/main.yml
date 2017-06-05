@@ -1,3 +1,11 @@
 ---
+ - name: update sanoid links
+   file: src="/var/cache/sanoid/sanoid-{{ sanoid_version }}/{{ item.src }}" dest="{{ item.dest }}" state=link
+   with_items:
+    - { src: findoid, dest: /usr/local/bin/findoid }
+    - { src: sanoid, dest: /usr/local/bin/sanoid }
+    - { src: syncoid, dest: /usr/local/bin/syncoid }
+    - { src: sanoid.defaults.conf, dest: /etc/sanoid/sanoid.defaults.conf }
+
  - name: reload nfs exports
    command: /usr/sbin/exportfs -r
