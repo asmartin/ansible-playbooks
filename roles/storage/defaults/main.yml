@@ -1,8 +1,21 @@
 ---
 # see group_vars/all for additional variables that can be overridden
 
-storage_packages_ubuntu:
+storage_packages_ubuntu_trusty:
  - nfs-kernel-server
+ - pv
+ - lzop
+ - mbuffer
+ - libconfig-inifiles-perl
+ - ubuntu-zfs
+
+storage_packages_ubuntu_xenial:
+ - nfs-kernel-server
+ - pv
+ - lzop
+ - mbuffer
+ - libconfig-inifiles-perl
+ - zfsutils-linux
 
 storage_clients: "*"
 container_clients: "*"
@@ -10,3 +23,35 @@ container_clients: "*"
 # uid and gid of the local user whose account should be used for anonymous mounts
 anonuid: 1000
 anongid: 1000
+
+configure_exports: True
+
+# extra /etc/exports entries
+extra_exports: ""
+
+sanoid_version: "1.4.8"
+
+sanoid_datasets:
+ - name: "myzpool/mydataset1"
+   config:
+    - "use_template = production"
+ - name: "myzpool/mydataset2"
+   config:  
+    - "use_template = production"
+    - "hourly = 6"
+
+sanoid_templates:
+ - name: "keeplong"
+   config:
+    - "hourly = 0"
+    - "daily = 14"
+    - "monthly = 12" 
+    - "autosnap = yes"
+    - "autoprune = yes"
+ - name: "keepshort"
+   config:
+    - "hourly = 0"
+    - "daily = 7"
+    - "monthly = 2" 
+    - "autosnap = yes"
+    - "autoprune = yes"
