@@ -23,9 +23,11 @@ Having a central storage server for all of your files and settings is a great wa
 
 This role now supports ZFS, a powerful filesystem for easily managing your data. When using ZFS, this role also includes support for [sanoid](https://github.com/jimsalterjrs/sanoid), which you can use to automatically take periodic snapshots of the filesystem and even sync them to another server (see the `sanoid_datasets` and `sanoid_templates` variables).
 
-#### Easy Server Deployment with LXC
+#### Easy Server Deployment with LXD
 
-You can easily spin up a number of servers using [LXC](https://linuxcontainers.org/lxc/introduction/) rather than setting up physical servers or virtual machines. This streamlines setup and does not have any special hardware requirements (e.g. does not require Vt-x). To utilize containers for creating your servers, run the `lxc.yml` playbook first. Note that it is recommended that you bundle the NFS Storage and LXC host on the same server by using the `storagelxc.yml` playbook instead of `storage.yml` and `lxc.yml`. See `roles/lxc/defaults/main.yml` for additional information.
+You can easily spin up a number of servers using [LXD](https://linuxcontainers.org/lxd/introduction/) rather than setting up physical servers or virtual machines. This streamlines setup and does not have any special hardware requirements (e.g. does not require Vt-x). To utilize containers for creating your servers, run the `lxd.yml` playbook first. Note that it is recommended that you bundle the NFS Storage and LXD host on the same server by using the `storagelxd.yml` playbook instead of `storage.yml` and `lxd.yml` so you can utilize the ZFS filesystem for setting up the containers efficiently. 
+
+The older [LXC](https://linuxcontainers.org/lxc/introduction/) container technology is also available in the `lxc` role.
 
 ### Prerequisites
 
