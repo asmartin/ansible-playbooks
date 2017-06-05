@@ -6,6 +6,7 @@ either as separate containers or virtual machines, including:
 -    storage - an NFS fileserver (NAS), run the `storage.yml` playbook (or if running with LXC, the recommended configuration, run the `storagelxc.yml` playbook)
 -    apache2 - configure the apache2 webserver with PHP for hosting websites
 -    nginx - configure the nginx webserver with PHP and SSL for hosting websites
+-    lxd - an LXD container host (see details below)
 -    lxc - an LXC container host with the [LXC Web Panel](https://github.com/claudyus/LXC-Web-Panel)
     -    before installation, determine if this playbook is going to be run on the same host as the `storage` playbook. If so, run the `storagelxc.yml` playbook
          rather than `lxc.yml`
