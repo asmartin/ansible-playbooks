@@ -4,3 +4,6 @@
 
  - name: restart postfix
    service: name=postfix state=restarted enabled=yes
+
+ - name: sysctl reload
+   command: /sbin/sysctl --system
