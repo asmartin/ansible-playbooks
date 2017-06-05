@@ -1,0 +1,6 @@
+---
+- hosts: 'lxdhost'
+  remote_user: root
+  roles:
+   - common
+   - lxd

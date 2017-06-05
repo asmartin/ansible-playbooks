@@ -1,0 +1,14 @@
+---
+host_packages:
+ - lxd
+ - nmap
+ - bridge-utils
+
+containers:
+ - { container: git, port: 80, service: gitbucket }
+
+# set to false to skip configuring /etc/network/interfaces and iptables
+lxd_configure_network: true
+
+# put your public SSH key here
+lxd_push_public_key: ""

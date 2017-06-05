@@ -1,0 +1,40 @@
+---
+ - name: add lxd repository
+   apt_repository: repo="ppa:ubuntu-lxc/stable"
+
+ - name: install required packages
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+   when: ansible_os_family == "Debian"
+   with_items: "{{ host_packages }}"
+
+ - name: update lxc config
+   template: src=default.conf.j2 dest=/etc/lxc/default.conf
+   notify: restart lxd
+
+ - name: check if lxc bridge is configured
+   command: /usr/bin/lxc profile show default
+   register: profile
+   changed_when: false
+   tags:
+    - not_in_dry_run
+
+ - name: delete incorrect lxc bridge config
+   command: /usr/bin/lxc profile device remove default eth0
+   when: profile.stdout.find(" br0") == -1
+   tags:
+    - not_in_dry_run
+
+ - name: create lxc bridge config
+   command: /usr/bin/lxc profile device add default eth0 nic nictype=bridged parent=br0
+   when: profile.stdout.find(" br0") == -1
+   tags:
+    - not_in_dry_run
+
+ - name: copy lxd scripts
+   template:
+     src: "{{ item.src }}"
+     dest: "{{ item.dest }}"
+     mode: "0755"
+   with_items:
+     - { src: bootstrap.sh, dest: /usr/local/bin/bootstrap.sh }
+     - { src: lxd-nfs.sh, dest: /usr/local/bin/lxd-nfs.sh }
