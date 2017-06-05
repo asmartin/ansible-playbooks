@@ -13,6 +13,7 @@ either as separate containers or virtual machines, including:
 -    gitbucket - sets up [Gitbucket](https://takezoe.github.io/gitbucket/), a Github clone, to create your own private or local git repository hosting. Note that the default credentials to login to the Gitbucket web interface are `root` and `root` (username and password respectively). Note: the initial run of this service will take several minutes before the web interface is accessible while the application is extracted (even after the playbook finishes).
 -    madsonic - sets up the [Madsonic](http://www.madsonic.org/) music and video streamer for streaming your music collection to your browser or smartphone. Note: the initial run of this service will take several minutes before the web interface is accessible while the application is extracted (even after the playbook finishes).
 -    qemu - a QEMU/KVM virtual machine host with `libvirt` for managing the virtual machines. You can use [virt-manager](https://virt-manager.org/) as a graphical VM manager from your local computer
+-    wiki - deploy an easy-to-maintain wiki with [DokuWiki](https://www.dokuwiki.org/dokuwiki#)
 
 #### NFS Storage
 
