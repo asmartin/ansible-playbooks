@@ -1,5 +1,5 @@
 ---
 dependencies:
  - { role: virt-netcfg, when: qemu_configure_network }
- - { role: nfs-mount, src: "{{ qemu_image_dir }}", dest: "/var/lib/libvirt/images", opts: "defaults,bg,nfsvers=3", when:  qemu_image_dir != "" }
- - { role: nfs-mount, src: "{{ nas_mount_base }}/backup", dest: "{{ qemu_backup }}", opts: "defaults,nfsvers=3", when: not installed_with_storage }
+ - { role: nfs-mount, src: "{{ qemu_image_dir }}", dest: "/var/lib/libvirt/images", opts: "defaults,bg,nfsvers=3", when:  qemu_image_dir != "" and not installed_with_storage }
+ - { role: nfs-mount, src: "{{ nas_mount_base }}/backup", dest: "{{ qemu_backup }}", opts: "defaults,nfsvers=3", when: qemu_backup != "" and not installed_with_storage }

@@ -1,6 +1,6 @@
 ---
  - name: install required packages
-   apt: name={{ item }} update_cache=yes state=latest
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}" state=latest
    when: ansible_os_family == "Debian"
    tags: not_in_dry_run
    with_items:
@@ -11,8 +11,16 @@
 
  - name: make sure qemu backup directory exists
    file: path="{{ qemu_backup }}" state=directory
+   when: qemu_backup != ""
 
  - name: enable iommu support
    template: src=grub dest=/etc/default/grub
    notify: rebuild grub
    when: qemu_iommu_support != ""
+
+ - name: configure image store symlink
+   file:
+     src: "{{ qemu_image_dir }}"
+     dest: /var/lib/libvirt/images
+     state: link
+   when: installed_with_storage
