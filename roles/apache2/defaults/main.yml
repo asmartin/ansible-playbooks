@@ -6,6 +6,7 @@ www_root: "/var/www"
 php_root: "{{ www_root }}"
 php_tmp: "{{ php_root }}/tmp"
 php_max_execution_time: 30
+php_open_basedir: "{{ php_root }}"
 before_vhost: ""
 inside_directory: ""
 inside_vhost: ""
