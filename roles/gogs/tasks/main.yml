@@ -1,6 +1,6 @@
 ---
  - name: install prerequisites
-   apt: name="{{ item }}" update_cache=yes
+   apt: name="{{ item }}" update_cache=yes cache_valid_time="{{ apt_cache_time }}"
    with_items:
     - ca-certificates # required for trusting apt key over HTTPS
     - apt-transport-https # required for installing packages over HTTPS
@@ -12,7 +12,7 @@
    apt_repository: repo="deb https://deb.packager.io/gh/pkgr/gogs {{ ansible_distribution_release }} pkgr"
 
  - name: install required packages
-   apt: name={{ item }} update_cache=yes
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
    when: ansible_os_family == "Debian"
    with_items:
     - gogs
