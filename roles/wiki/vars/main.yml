@@ -1,0 +1,3 @@
+---
+wiki_tmp: /tmp/wiki
+php_open_basedir: "{{ php_root }}:/dev/urandom"

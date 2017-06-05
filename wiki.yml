@@ -1,0 +1,6 @@
+---
+- hosts: 'wiki'
+  remote_user: root
+  roles:
+   - common
+   - wiki

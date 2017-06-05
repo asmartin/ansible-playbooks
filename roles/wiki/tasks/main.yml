@@ -1,0 +1,30 @@
+---
+ - name: download dokuwiki source
+   get_url: url=http://download.dokuwiki.org/src/dokuwiki/dokuwiki-stable.tgz dest=/tmp
+
+ - name: extract dokuwiki
+   unarchive: src=/tmp/dokuwiki-stable.tgz dest=/tmp copy=no
+
+ - name: identify extracted directory
+   shell: ls -d /tmp/doku*/
+   register: wiki_tmp
+   changed_when: False
+
+ - name: move dokuwiki files to www-root
+   shell: "rsync -a {{ wiki_tmp.stdout }}/ {{ www_root }}"
+
+ - name: set permissions on www-root
+   file: path={{ www_root }} owner=www-data group=www-data state=directory recurse=yes
+
+ - name: setup .htaccess file
+   file: src="{{ www_root }}/.htaccess.dist" dest="{{ www_root }}/.htaccess" state=link
+
+ - name: remove messages cache
+   file: path="{{ www_root }}/data/cache/messages.txt" state=absent
+
+ - name: remove temporary files
+   file: path={{ item }} state=absent
+   changed_when: False
+   with_items:
+    - "{{ wiki_tmp.stdout }}"
+    - /tmp/dokuwiki-stable.tgz

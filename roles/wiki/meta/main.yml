@@ -1,0 +1,4 @@
+---
+dependencies:
+ - { role: apache2 }
+ - { role: nfs-mount, src: "{{ nas_mount_base }}/www", dest: "{{ www_root }}", opts: "defaults,nfsvers=3", when: use_nas }
