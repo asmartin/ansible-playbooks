@@ -29,15 +29,15 @@ configure_exports: True
 # extra /etc/exports entries
 extra_exports: ""
 
-sanoid_version: "1.4.8"
+sanoid_version: "1.4.13"
 
 sanoid_datasets:
  - name: "myzpool/mydataset1"
    config:
-    - "use_template = production"
+    - "use_template = keeplong"
  - name: "myzpool/mydataset2"
    config:  
-    - "use_template = production"
+    - "use_template = keepshort"
     - "hourly = 6"
 
 sanoid_templates:

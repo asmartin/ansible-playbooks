@@ -20,7 +20,7 @@
     - /var/cache/sanoid
  
  - name: download sanoid
-   get_url: url=https://github.com/jimsalterjrs/sanoid/archive/v1.4.6c.tar.gz dest=/var/cache/sanoid/{{ sanoid_version }}.tar.gz
+   get_url: url=https://github.com/jimsalterjrs/sanoid/archive/v{{ sanoid_version }}.tar.gz dest=/var/cache/sanoid/{{ sanoid_version }}.tar.gz
    register: sanoid_update
 
  - name: extract sanoid
