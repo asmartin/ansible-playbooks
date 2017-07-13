@@ -27,7 +27,7 @@ domain: "avidandrew.com"
 notification_email: "you@example.com"
 
 # your public SSH key (generate with "ssh-keygen -t rsa" and then find it in ~/.ssh/id_rsa.pub)
-public_key: ""
+public_key: []
 
 # time between updating the apt cache
 apt_cache_time: 3600
