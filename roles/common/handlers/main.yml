@@ -1,6 +1,18 @@
 ---
  - name: restart smartmontools
-   service: name=smartmontools state=restarted enabled=yes sleep=5
+   service:
+     name: smartmontools
+     state: restarted
+     enabled: yes
+     sleep: 5
+   when: ansible_os_family == "Debian"
+
+ - name: restart smartd
+   service:
+     name: smartd
+     state: restarted
+     enabled: yes
+   when: ansible_os_family == "FreeBSD"
 
  - name: restart postfix
    service: name=postfix state=restarted enabled=yes

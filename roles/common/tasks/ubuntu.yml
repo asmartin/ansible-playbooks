@@ -1,0 +1,57 @@
+---
+ - name: install common packages (Ubuntu) 
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"      
+   with_items: "{{ packages_ubuntu }}"     
+
+ - name: remove unwanted packages (Ubuntu) 
+   apt: name={{ item }} state=absent       
+   with_items: "{{ packages_removed_ubuntu }}"                                        
+
+ - name: remove ubuntu user
+   user: name=ubuntu state=absent
+   when: public_key != ""
+
+ - name: install smartmontools
+   apt: name=smartmontools update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+   when: use_smart
+
+ - name: configure /etc/mailname           
+   template: src=mailname.j2 dest=/etc/mailname
+
+ - name: check if md/raids exist
+   stat:
+     path: /sbin/mdadm
+   register: mdadm_check
+   changed_when: False
+
+ - name: monitor raid arrays
+   cron: name="monitor raid arrays" minute="1" job="/sbin/mdadm --monitor --scan --mail={{ notification_email }} -1"
+   when: mdadm_check.stat.exists
+   tags:
+    - not_in_dry_run
+
+ - name: copy ubuntu-specific scripts
+   template: src="{{ item.name }}" dest="/usr/local/bin/{{ item.name }}" mode=0755
+   with_items:
+    - { name: purge-old-kernels }
+
+ - name: purge old kernels
+   cron:
+     name: "purge old kernels"
+     job: /usr/local/bin/purge-old-kernels
+     minute: 0
+     hour: 1
+
+ - name: enable magic sysreq keys
+   template:
+     src: 10-magic-sysrq.conf
+     dest: /etc/sysctl.d/10-magic-sysrq.conf
+   notify: sysctl reload
+   when: ansible_virtualization_role != "guest"
+
+ - name: copy config files                 
+   template: src={{ item.src }} dest={{ item.dest }}                                  
+   with_items:                             
+    - { src: 20auto_upgrades.j2, dest: /etc/apt/apt.conf.d/20auto-upgrades }          
+    - { src: "{{ unattended_upgrades_template }}", dest: /etc/apt/apt.conf.d/50unattended-upgrades }                                                                        
+    - { src: dpkg.nodoc, dest: /etc/dpkg/dpkg.cfg.d/01_nodoc }

@@ -1,0 +1,51 @@
+---
+ - name: install common packages
+   pkgng:
+     name: "{{ item }}"
+   with_items: "{{ packages_freebsd }}"
+
+ - name: install smartmontools
+   pkgng:
+     name: smartmontools
+   when: use_smart
+
+ - name: enable smartmontools
+   sysrc:
+     name: smartd_enable
+     value: "YES"
+   when: use_smart
+
+ - name: enable postfix
+   sysrc:
+     name: postfix_enable
+     value: "YES"
+
+ - name: install ntp
+   pkgng:
+     name: ntp
+   when: use_ntp
+
+ - name: enable ntp
+   sysrc:
+     name: ntpd_enable
+     value: "YES"
+
+ - name: create bash symlink for compatiblity
+   file:
+     src: /usr/local/bin/bash
+     dest: /bin/bash
+     state: link
+
+ - name: template files
+   template:
+     src: "{{ item.src }}"
+     dest: "{{ item.dest }}"
+     mode: "{{ item.mode|default('0644') }}"
+   with_items:
+     - { src: freebsd-update-cron, dest: /usr/local/bin/freebsd-update-cron, mode : "0755" }
+
+ - name: schedule automatic updates
+   cron:
+     name: install updates
+     job: /usr/local/bin/freebsd-update-cron
+     special_time: daily

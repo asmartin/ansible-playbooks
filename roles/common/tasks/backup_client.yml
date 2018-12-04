@@ -1,0 +1,13 @@
+---
+ - name: create root's ~/.ssh directory
+   file: path=/root/.ssh state=directory
+ 
+ - name: install root's ssh keys
+   template: src={{ item.name }} dest="/root/.ssh/{{ item.name }}" mode="{{ item.mode | default('0644') }}"
+   no_log: True
+   with_items:
+    - { name: "id_rsa.pub" }
+    - { name: "id_rsa", mode: "0600" }
+
+ - name: trust the backup server's host key
+   known_hosts: path=/root/.ssh/known_hosts name="{{ backup_hostname }}" key="{{ backup_public_host_id }}"

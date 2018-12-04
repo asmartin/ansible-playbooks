@@ -1,0 +1,9 @@
+#!/bin/bash
+# {{ ansible_managed }}
+###############################################################################
+## Author: Andrew Martin <amartin@avidandrew.com>
+## Date:   8/26/17
+## Descr:  Automatically fetches and installs all updates
+###############################################################################
+env PAGER=cat freebsd-update fetch
+freebsd-update install

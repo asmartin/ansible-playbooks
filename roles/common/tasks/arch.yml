@@ -1,0 +1,4 @@
+---
+ - name: install common packages (Arch)
+   pacman: name={{ item }}
+   with_items: "{{ packages_arch }}"
