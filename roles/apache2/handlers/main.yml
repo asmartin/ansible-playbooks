@@ -1,6 +1,6 @@
 ---
  - name: reload apache2
-   service: name=apache2 state=reloaded enabled=yes
+   service: name="{{ apache2_service }}" state=reloaded enabled=yes
 
  - name: restart apache2
-   service: name=apache2 state=restarted enabled=yes
+   service: name="{{ apache2_service }}" state=restarted enabled=yes

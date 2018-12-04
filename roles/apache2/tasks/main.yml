@@ -1,48 +1,25 @@
 ---
- - name: install required packages
-   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+ - include: ubuntu.yml
    when: ansible_os_family == "Debian"
-   with_items: "{{ apache2_packages }}"
 
- - name: install trusty packages
-   apt: name={{ item }}
-   when: ansible_distribution_release == "trusty"
-   with_items:
-    - libapache2-mod-php5
-    - php5-gd
-
- - name: install xenial packages
-   apt: name={{ item }}
-   when: ansible_distribution_release != "trusty"
-   with_items:
-    - libapache2-mod-php
-    - php-gd
-
- - name: install additional packages
-   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   when: ansible_os_family == "Debian" and apache2_additional_packages != ""
-   with_items: "{{ apache2_additional_packages }}"
+ - include: freebsd.yml
+   when: ansible_os_family == "FreeBSD"
 
  - name: create www-root
-   file: path={{ www_root }} owner=www-data group=www-data state=directory recurse=yes
+   file: path={{ www_root }} owner={{ apache2_user }} group={{ apache2_group }} state=directory recurse=yes
    when: create_www_root
 
  - name: create php temp dir
-   file: path={{ php_tmp }} owner=www-data group=www-data state=directory recurse=yes
+   file: path={{ php_tmp }} owner={{ apache2_user }} group={{ apache2_group }} state=directory recurse=yes
 
  - name: copy apache2 config
-   template: src={{ apache2_config }} dest=/etc/apache2/sites-enabled/default.conf
+   template: src={{ apache2_config }} dest={{ apache2_config_dest }}
    notify: reload apache2
-
- - name: make sure default apache2 config is absent
-   file: path="/etc/apache2/sites-enabled/{{ item }}" state=absent
-   with_items:
-    - 000-default
-    - 000-default.conf
 
  - name: copy php.ini
-   template: src={{ php_config }} dest=/etc/{{ (ansible_distribution_release == "trusty") | ternary("php5", "php/7.0") }}/apache2/php.ini
-   notify: reload apache2
+   template: src={{ php_config }} dest={{ php_config_dest }}
+   notify:
+    - reload apache2
 
  - name: enable apache2 modules
    apache2_module: name={{ item }} state=present

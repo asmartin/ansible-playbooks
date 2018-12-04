@@ -2,8 +2,8 @@
 
 {{ before_vhost }}
 
-<VirtualHost *:{{ port }}>
-    ServerName {{ apache2_hostname }}.{{ domain }}:{{ port }}
+<VirtualHost *:{{ apache2_port }}>
+    ServerName {{ apache2_hostname }}.{{ domain }}:{{ apache2_port }}
 
     DocumentRoot {{ www_root }}
 

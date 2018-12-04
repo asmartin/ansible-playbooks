@@ -1,0 +1,34 @@
+---
+ - name: install apache2 packages
+   pkgng:
+     name: "{{ item }}"
+   with_items:
+     - apache24
+     - mod_php71
+     - php71-gd
+     - php71-session
+     - php71-xml
+
+ - name: enable apache2
+   sysrc:
+     name: "apache24_enable"
+     value: "YES"
+   notify: restart apache2
+
+ - name: install additional packages
+   pkgng:
+     name: "{{ item }}"
+   when: apache2_additional_packages != ""              
+   with_items: "{{ apache2_additional_packages }}"
+
+ - name: enable mod_php
+   template:
+     src: php.freebsd.conf.j2
+     dest: "{{ conf_dir }}/apache24/Includes/php.conf"
+   notify: restart apache2
+
+ - name: remove default apache24 directory
+   file:
+     path: "{{ www_root }}/apache24"
+     state: absent
+   notify: reload apache2
