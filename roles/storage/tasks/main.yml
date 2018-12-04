@@ -1,23 +1,15 @@
 ---
- - name: add ZFS ppa
-   apt_repository: repo="ppa:zfs-native/stable"
-   when: ansible_distribution_release == "trusty"
+ - include: ubuntu.yml                     
+   when: ansible_os_family == "Debian"     
 
- - name: install required packages (trusty)
-   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   when: ansible_distribution_release == "trusty"
-   with_items: "{{ storage_packages_ubuntu_trusty }}"
-
- - name: install required packages
-   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   when: ansible_distribution_release != "trusty"
-   with_items: "{{ storage_packages_ubuntu_xenial }}"
+ - include: freebsd.yml                    
+   when: ansible_os_family == "FreeBSD"
 
  - name: create sanoid directories
    file: path={{ item }} state=directory
    with_items:
-    - /etc/sanoid
-    - /var/cache/sanoid
+     - "{{ conf_dir }}/sanoid"
+     - /var/cache/sanoid
  
  - name: download sanoid
    get_url: url=https://github.com/jimsalterjrs/sanoid/archive/v{{ sanoid_version }}.tar.gz dest=/var/cache/sanoid/{{ sanoid_version }}.tar.gz
@@ -26,22 +18,18 @@
  - name: extract sanoid
    unarchive: src=/var/cache/sanoid/{{ sanoid_version }}.tar.gz dest=/var/cache/sanoid copy=no
    when: sanoid_update.changed
-   notify: update sanoid links
+   notify: update sanoid
 
  - name: copy sanoid config file
-   template: src=sanoid.conf dest=/etc/sanoid/sanoid.conf
+   template: src=sanoid.conf dest="{{ conf_dir }}/sanoid/sanoid.conf"
 
  - name: schedule sanoid cron
    cron: name="run sanoid backup" job="/usr/local/bin/sanoid --cron"
 
- - name: make sure storage root exists
-   file: path={{ item }} state=directory
-   with_items:
-    - "{{ storage_path }}"
-    - "{{ container_path }}"
-
  - name: set /etc/exportfs
    template: src=exports.j2 dest=/etc/exports
-   notify: reload nfs exports
+   notify:
+     - reload nfs exports ubuntu
+     - reload nfs exports freebsd
    when: configure_exports
 

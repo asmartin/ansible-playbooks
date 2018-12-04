@@ -17,7 +17,7 @@ storage_packages_ubuntu_xenial:
  - libconfig-inifiles-perl
  - zfsutils-linux
 
-storage_clients: "*"
+storage_clients: "192.168.0.0/24"
 container_clients: "*"
 
 # uid and gid of the local user whose account should be used for anonymous mounts
@@ -30,6 +30,9 @@ configure_exports: True
 extra_exports: ""
 
 sanoid_version: "1.4.13"
+
+storage_dataset: myzpool/storage
+exportfs_exclude_regex: "not/this/dataset"
 
 sanoid_datasets:
  - name: "myzpool/mydataset1"
@@ -48,6 +51,7 @@ sanoid_templates:
     - "monthly = 12" 
     - "autosnap = yes"
     - "autoprune = yes"
+    - "recursive = yes"
  - name: "keepshort"
    config:
     - "hourly = 0"
@@ -55,3 +59,4 @@ sanoid_templates:
     - "monthly = 2" 
     - "autosnap = yes"
     - "autoprune = yes"
+    - "recursive = yes"
