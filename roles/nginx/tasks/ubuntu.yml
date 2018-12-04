@@ -1,0 +1,17 @@
+---
+ - name: install nginx
+   apt:
+     name: "{{ item }}"
+   with_items:                             
+     - nginx
+
+ - name: copy nginx configuration          
+   template: src=site dest=/etc/nginx/sites-available/{{ item.site_name }}            
+   with_items: "{{ sites }}"               
+   notify: reload nginx                    
+   tags:                                   
+    - config                               
+
+ - name: create sites-enabled symlink      
+   file: src=/etc/nginx/sites-available/{{ item.site_name }} dest=/etc/nginx/sites-enabled/{{ item.site_name }} state=link                                                  
+   with_items: "{{ sites }}"

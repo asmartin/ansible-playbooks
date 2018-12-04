@@ -1,0 +1,34 @@
+---
+  - name: install nginx
+    pkgng:
+      name: "{{ item }}"
+    with_items:
+      - nginx
+
+  - name: enable nginx
+    sysrc:
+      name: nginx_enable
+      value: YES
+
+  - name: create log directory
+    file:
+      path: /var/log/nginx
+      owner: "{{ nginx_user }}"
+      group: "{{ nginx_group }}"
+      state: directory
+
+  - name: copy nginx configuration          
+    template: src=nginx.freebsd.conf dest="{{ conf_dir }}/nginx/nginx.conf"
+    with_items: "{{ sites }}"               
+    notify: reload nginx                    
+    tags:                                   
+      - config
+
+  - name: remove default nginx directory
+    file:
+      path: "{{ www_root }}/{{ item }}"
+      state: absent
+    notify: reload nginx
+    with_items:
+      - nginx
+      - nginx-dist

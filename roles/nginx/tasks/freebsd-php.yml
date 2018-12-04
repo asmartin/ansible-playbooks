@@ -1,0 +1,29 @@
+---
+ - name: install php packages
+   pkgng:
+     name: "{{ jtem }}"
+   loop_control:
+     loop_var: jtem
+   with_items:
+     - php71
+     - php71-gd
+     - php71-session
+     - php71-xml
+
+ - name: enable php-fpm
+   sysrc:
+     name: "php_fpm_enable"
+     value: "YES"
+   notify: restart php-fpm
+
+ - name: copy files
+   template: src={{ jtem.src }} dest={{ jtem.dest }} owner="{{ nginx_user }}" group="{{ nginx_group }}" mode=0644
+   loop_control:
+     loop_var: jtem
+   with_items:
+     - { src: "{{ php_ini_template }}", dest: "{{ conf_dir }}/php.ini" }
+     - { src: "{{ php_pool }}", dest: "{{ conf_dir }}/php-fpm.conf" }
+   notify: restart php-fpm
+
+ - name: create php temporary directory
+   file: path={{ php_root }}/tmp state=directory owner="{{ nginx_user }}" group="{{ nginx_group }}" mode=0750

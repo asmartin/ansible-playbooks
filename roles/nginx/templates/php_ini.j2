@@ -378,7 +378,7 @@ safe_mode_protected_env_vars = LD_LIBRARY_PATH
 ; or per-virtualhost web server configuration file. This directive is
 ; *NOT* affected by whether Safe Mode is turned On or Off.
 ; http://php.net/open-basedir
-open_basedir = {{ php_ini.open_basedir }}
+open_basedir = {{ my_php_ini.open_basedir | default(php_ini.open_basedir) }}
 
 ; This directive allows you to disable certain functions for security reasons.
 ; It receives a comma-delimited list of function names. This directive is
@@ -443,7 +443,7 @@ expose_php = Off
 ; Maximum execution time of each script, in seconds
 ; http://php.net/max-execution-time
 ; Note: This directive is hardcoded to 0 for the CLI SAPI
-max_execution_time = {{ php_ini.max_execution_time }}
+max_execution_time = {{ my_php_ini.max_execution_time | default(php_ini.max_execution_time) }}
 
 ; Maximum amount of time each script may spend parsing request data. It's a good
 ; idea to limit this time on productions servers in order to eliminate unexpectedly
@@ -453,7 +453,7 @@ max_execution_time = {{ php_ini.max_execution_time }}
 ; Development Value: 60 (60 seconds)
 ; Production Value: 60 (60 seconds)
 ; http://php.net/max-input-time
-max_input_time = {{ php_ini.max_input_time }}
+max_input_time = {{ my_php_ini.max_input_time | default(php_ini.max_input_time) }}
 
 ; Maximum input variable nesting level
 ; http://php.net/max-input-nesting-level
@@ -464,7 +464,7 @@ max_input_time = {{ php_ini.max_input_time }}
 
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
-memory_limit = {{ php_ini.memory_limit }}
+memory_limit = {{ my_php_ini.memory_limit | default(php_ini.memory_limit) }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -739,7 +739,7 @@ auto_globals_jit = On
 
 ; Maximum size of POST data that PHP will accept.
 ; http://php.net/post-max-size
-post_max_size = {{ php_ini.post_max_size }}
+post_max_size = {{ my_php_ini.post_max_size | default(php_ini.post_max_size) }}
 
 ; Magic quotes are a preprocessing feature of PHP where PHP will attempt to
 ; escape any character sequences in GET, POST, COOKIE and ENV data which might
@@ -881,19 +881,19 @@ enable_dl = Off
 
 ; Whether to allow HTTP file uploads.
 ; http://php.net/file-uploads
-file_uploads = {{ php_ini.file_uploads }}
+file_uploads = {{ my_php_ini.file_uploads | default(php_ini.file_uploads) }}
 
 ; Temporary directory for HTTP uploaded files (will use system default if not
 ; specified).
 ; http://php.net/upload-tmp-dir
-upload_tmp_dir = {{ php_ini.upload_tmp_dir }}
+upload_tmp_dir = {{ my_php_ini.upload_tmp_dir | default(php_ini.upload_tmp_dir) }}
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = {{ php_ini.upload_max_filesize }}
+upload_max_filesize = {{ my_php_ini.upload_max_filesize | default(php_ini.upload_max_filesize) }}
 
 ; Maximum number of files that can be uploaded via a single request
-max_file_uploads = {{ php_ini.max_file_uploads }}
+max_file_uploads = {{ my_php_ini.max_file_uploads | default(php_ini.max_file_uploads) }}
 
 ;;;;;;;;;;;;;;;;;;
 ; Fopen wrappers ;
@@ -901,7 +901,7 @@ max_file_uploads = {{ php_ini.max_file_uploads }}
 
 ; Whether to allow the treatment of URLs (like http:// or ftp://) as files.
 ; http://php.net/allow-url-fopen
-allow_url_fopen = {{ php_ini.allow_url_fopen }}
+allow_url_fopen = {{ my_php_ini.allow_url_fopen | default(php_ini.allow_url_fopen) }}
 
 ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
 ; http://php.net/allow-url-include
@@ -1441,7 +1441,7 @@ session.save_handler = files
 ; where MODE is the octal representation of the mode. Note that this
 ; does not overwrite the process's umask.
 ; http://php.net/session.save-path
-session.save_path = {{ php_ini.session_save_path }}
+session.save_path = {{ my_php_ini.session_save_path | default(php_ini.session_save_path) }}
 
 ; Whether to use cookies.
 ; http://php.net/session.use-cookies
