@@ -1,0 +1,8 @@
+---
+ - name: set permissions on www-root
+   file:
+     path: "{{ www_root }}"
+     owner: "{{ apache2_user }}"
+     group: "{{ apache2_group }}"
+     recurse: yes
+     state: directory
