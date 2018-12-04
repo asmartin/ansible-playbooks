@@ -12,7 +12,7 @@ preferred_browser: "chrome"
 chrome_sites: "google.com|gmail.com|netflix.com|amazon.com"
 
 # pipe-separated list of sites that work better on firefox
-firefox_sites: "mozilla.org|hulu.com|acorn.tv"
+firefox_sites: "mozilla.org|acorn.tv"
 
 sleep_timer: /tmp/sleep
 
@@ -23,3 +23,9 @@ use_pulseaudio: true
 # a graphics driver bug sometimes prevents audio from working after suspend
 # enable this to install a workaround for this problem (xenial or newer only)
 fix_pulseaudio_suspend: false
+
+# enable if you want to use HAL for Adobe Flash DRM content
+use_hal: False
+
+# automatically set HDMI as the default sound device
+set_hdmi_sound: True

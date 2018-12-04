@@ -7,12 +7,13 @@
 
  - name: add repository for HAL
    apt_repository: repo="ppa:mjblenner/ppa-hal" state=present
+   when: use_hal
 
  - name: install viewer packages
-   apt: name={{ item }} state=latest update_cache=yes
+   apt: name={{ item }} state=latest update_cache=yes cache_valid_time="{{ apt_cache_time }}"
    with_items:
     - firefox
-    - python-software-properties
+    - "{{ (ansible_distribution_release == 'xenial') | ternary('python-software-properties', 'software-properties-common') }}"
     - ubuntu-restricted-extras
     - xinetd
     - libnotify-bin
@@ -28,6 +29,7 @@
    # a separate task since we want state=present, not state=latest
  - name: install hal
    apt: name=hal state=present
+   when: use_hal
 
  - name: install pulseaudio
    apt: name=pavucontrol state=latest
@@ -50,13 +52,13 @@
 
  - name: install HAL upstart job
    template: src=hal.upstart.conf dest=/etc/init/hal.conf
-   when: ansible_distribution_release == "trusty"
+   when: ansible_distribution_release == "trusty" and use_hal
    notify: restart HAL
 
  - name: install HAL systemd unit
    template: src=hal.systemd.service dest=/etc/systemd/system/hal.service
-   when: ansible_distribution_release != "trusty"
-   notify: restart HAL
+   when: ansible_distribution_release != "trusty" and use_hal
+   notify: restart HAL systemd
 
  - name: download SimpleComputerRemote
    get_url: url="{{ simplecomputeremote_url }}" dest="/tmp/SimpleComputerRemote.deb"
@@ -85,7 +87,7 @@
  - name: create websockify systemd unit
    template: src=websockify.systemd.service dest=/etc/systemd/system/websockify.service
    when: ansible_distribution_release != "trusty"
-   notify: restart websockify
+   notify: restart websockify systemd
 
  - name: create x11vnc upstart job
    template: src=x11vnc.upstart.j2 dest=/etc/init/x11vnc.conf
@@ -95,7 +97,7 @@
  - name: create x11vnc systemd unit
    template: src=x11vnc.systemd.service dest=/etc/systemd/system/x11vnc.service
    when: ansible_distribution_release != "trusty"
-   notify: restart x11vnc
+   notify: restart x11vnc systemd
 
  - name: create autostart directory
    file: path="/home/{{ viewer_user }}/.config/autostart" state=directory owner="{{ viewer_user }}" group="{{ viewer_user }}"
@@ -131,6 +133,7 @@
     - sleeper.sh
     - enable-wakeup.sh
     - select-resume-devices.sh
+    - set_hdmi_sound.sh
 
  - name: schedule sleeper cron
    cron: name="sleeper.sh" job=/usr/local/bin/sleeper.sh
@@ -148,5 +151,19 @@
 
  - name: fix pulseaudio resume from sleep
    template: src=resume-fix-pulseaudio.service dest=/etc/systemd/system/resume-fix-pulseaudio.service
-   notify: enable puseaudio fix
-   when: fix_pulseaudio_suspend
+   notify: enable pulseaudio fix
+   when: fix_pulseaudio_suspend and ansible_distribution_release != "trusty" 
+
+ - block:
+    - name: copy udev rule for hdmi sound
+      template:
+        src: 99-hdmi-sound.rules
+        dest: /etc/udev/rules.d/99-hdmi-sound.rules
+      notify: reload udev
+   
+    - name: copy systemd unit for hdmi sound
+      template:
+        src: set_hdmi_sound.service
+        dest: /etc/systemd/system/set_hdmi_sound.service
+      notify: restart set_hdmi_sound
+   when: set_hdmi_sound
