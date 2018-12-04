@@ -1,0 +1,10 @@
+---
+  - name: restart subsonic
+    service: name=subsonic state=restarted enabled=yes
+ 
+  - name: restart libresonic
+    systemd:
+      daemon_reload: yes
+      name: libresonic
+      state: restarted
+      enabled: yes

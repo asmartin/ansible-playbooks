@@ -1,0 +1,17 @@
+---
+# local directories (or NFS mountpoints if use_nas is true) for music or videos
+subsonic_music_dir: /mnt/Music
+
+# nfs exports where music and videos are stored (when use_nas is true)
+subsonic_music_export: "{{ nas_hostname }}:{{ storage_path }}/Music"
+
+subsonic_port: "8080"
+
+# use libresonic on ubuntu
+libresonic_version: "6.2"
+libresonic_filename: "libresonic-v{{ libresonic_version }}.war"
+libresonic_url: "https://libresonic.org/release/{{ libresonic_filename }}"
+libresonic_checksum: "sha512:2252860394db2140506f6a6858836f51b15ea77b15a77fa4a51c7fed3bca37fdf59e4f5fd5c753e873416bb690aa417aa804a13b213eba45015ac160bf38aa03"
+libresonic_group: libresonic
+libresonic_user: libresonic
+libresonic_home: /var/libresonic
