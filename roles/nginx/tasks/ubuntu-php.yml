@@ -1,0 +1,15 @@
+---
+ - name: install php packages
+   apt: pkg="{{ php_version }}-fpm" state=present 
+
+ - name: copy files
+   template: src={{ jtem.src }} dest={{ jtem.dest }} owner="{{ nginx_user }}" group="{{ nginx_group }}" mode=0644
+   loop_control:
+     loop_var: jtem
+   with_items:
+   - { src: "{{ php_ini_template }}", dest: "{{ php_conf_dir }}/fpm/php.ini" }
+   - { src: "{{ php_pool }}", dest: "{{ php_conf_dir }}/fpm/pool.d/www.conf" }
+   notify: restart {{ php_version }}-fpm
+
+ - name: create php temporary directory
+   file: path={{ php_root }}/tmp state=directory owner="{{ nginx_user }}" group="{{ nginx_group }}" mode=0750

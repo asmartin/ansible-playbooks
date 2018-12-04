@@ -1,9 +1,12 @@
 ---
 admin_email: "webmaster@localhost"
 www_permissions: "0755"
-www_root: "/var/www"
-www_root_owner: "www-data"
-www_root_group: "www-data"
+
+nginx_user: "{{ (ansible_os_family == 'FreeBSD') | ternary('www', 'www-data') }}"
+nginx_group: "{{ (ansible_os_family == 'FreeBSD') | ternary('www', 'www-data') }}"
+www_root: "{{ (ansible_os_family == 'FreeBSD') | ternary('/usr/local/www/', '/var/www') }}"
+
+nginx_cache_static_files: True
 protect_hidden_files: True
 client_max_body_size: "100M"
 
@@ -11,6 +14,7 @@ client_max_body_size: "100M"
 php_version: "{{ (ansible_distribution_release == 'trusty') | ternary('php5', 'php7.0') }}"
 php_conf_dir: "{{ (ansible_distribution_release == 'trusty') | ternary('/etc/php5', '/etc/php/7.0') }}"
 php_ini_template: "php_ini.j2"
+my_php_ini: []
 php_pool: "www.conf.j2"
 php_root: "{{ www_root }}"
 default_php_disable_functions:
@@ -64,6 +68,6 @@ php_ini:
 ### SITE CONFIGS ###
 sites:
  - site_name: "localhost.localdomain"
-   php: False
-   ssl: True
+   php: True
+   ssl: False
    extra_directives: []

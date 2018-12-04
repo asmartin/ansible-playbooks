@@ -1,9 +1,15 @@
 ---
   - name: reload nginx
-    service: name=nginx state=reloaded enabled=true
+    service: name=nginx state=reloaded enabled=yes
 
   - name: restart php5-fpm
-    service: name=php5-fpm state=restarted enabled=true
+    service: name=php5-fpm state=restarted enabled=yes
 
   - name: restart php7.0-fpm
-    service: name=php7.0-fpm state=restarted enabled=true
+    service: name=php7.0-fpm state=restarted enabled=yes
+
+  - name: restart php-fpm
+    service:
+      name: php-fpm
+      state: restarted
+      enabled: yes
