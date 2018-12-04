@@ -1,8 +1,16 @@
 ---
 apache2_hostname: "{{ ansible_hostname }}"
 domain: "avidandrew.com"
-port: 80
-www_root: "/var/www"
+apache2_service: "{{ (ansible_os_family == 'FreeBSD') | ternary('apache24', 'apache2') }}"
+apache2_user: "{{ (ansible_os_family == 'FreeBSD') | ternary('www', 'www-data') }}"
+apache2_group: "{{ (ansible_os_family == 'FreeBSD') | ternary('www', 'www-data') }}"
+ubuntu_php_prefix: "{{ (ansible_distribution_release == 'xenial') | ternary('php/7.0', 'php/7.2') }}"
+apache2_config: "{{ (ansible_os_family == 'FreeBSD') | ternary('httpd.conf.j2', 'default.j2') }}"
+apache2_config_dest: "{{ conf_dir }}/{{ (ansible_os_family == 'FreeBSD') | ternary('/apache24/httpd.conf', 'apache2/sites-enabled/default.conf') }}"
+php_config: php.ini.j2
+php_config_dest: "{{ conf_dir }}/{{ (ansible_os_family == 'FreeBSD') | ternary('php.ini', ubuntu_php_prefix + '/apache2/php.ini') }}"
+apache2_port: 80
+www_root: "{{ (ansible_os_family == 'FreeBSD') | ternary('/usr/local/www/', '/var/www') }}"
 php_root: "{{ www_root }}"
 php_tmp: "{{ php_root }}/tmp"
 php_max_execution_time: 30
@@ -11,8 +19,6 @@ before_vhost: ""
 inside_directory: ""
 inside_vhost: ""
 www_root_options: ""
-php_config: php.ini.j2
-apache2_config: default.j2
 apache2_additional_packages: ""
 create_www_root: true
 

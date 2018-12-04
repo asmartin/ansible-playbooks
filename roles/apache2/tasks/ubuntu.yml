@@ -1,0 +1,30 @@
+---
+ - name: install required packages
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
+   with_items:
+    - apache2
+
+ - name: install trusty packages           
+   apt: name={{ item }}                    
+   when: ansible_distribution_release == "trusty"                                     
+   with_items:                             
+    - libapache2-mod-php5                  
+    - php5-gd                              
+
+ - name: install xenial packages           
+   apt: name={{ item }}                    
+   when: ansible_distribution_release != "trusty"                                     
+   with_items:                             
+    - libapache2-mod-php                   
+    - php-gd                               
+
+ - name: install additional packages       
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"      
+   when: apache2_additional_packages != ""          
+   with_items: "{{ apache2_additional_packages }}"
+
+ - name: make sure default apache2 config is absent                                   
+   file: path="/etc/apache2/sites-enabled/{{ item }}" state=absent                    
+   with_items:                             
+    - 000-default                          
+    - 000-default.conf
