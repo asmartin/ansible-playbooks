@@ -30,7 +30,7 @@ function launch_chrome() {
 	notify "Loading..." "$(echo $1 | awk -F/ '{ print $3 }')"
 	sed -i 's/"exit_type": "Crashed"/"exit_type": "Normal"/' ~/.config/chromium/Default/Preferences
 	sed -i 's/"exited_cleanly": false/"exited_cleanly": true/' ~/.config/chromium/Default/Preferences
-	google-chrome --ssl-version-min=tls1 --kiosk --ignore-gpu-blacklist --disable-restore-session-state --disable-infobars --disable-session-crashed-bubble $1 &
+	google-chrome --no-default-browser-check --ssl-version-min=tls1 --start-fullscreen --ignore-gpu-blacklist --disable-restore-session-state --disable-infobars --disable-session-crashed-bubble  --app=$1 &
 }
 
 function launch_firefox() {
@@ -129,6 +129,7 @@ elif [ "$link" == "services" ]; then
 	kill -9 $(ps aux | grep [S]impleComputerRemote | awk '{ print $2 }')
 	sleep 1
 	log "restarting SimpleComputerRemote and other services"
+	sudo service lightdm restart 2>&1 | logger -t $SCRIPT_NAME
 	sudo service websockify restart 2>&1 | logger -t $SCRIPT_NAME
 	sudo service x11vnc restart 2>&1 | logger -t $SCRIPT_NAME
 	nohup /opt/rekap/SimpleComputerRemote & disown

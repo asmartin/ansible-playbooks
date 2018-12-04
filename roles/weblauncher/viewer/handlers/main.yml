@@ -5,11 +5,45 @@
  - name: restart websockify
    service: name=websockify enabled=yes state=restarted
 
+ - name: restart websockify systemd
+   systemd:
+     name: websockify
+     state: restarted
+     enabled: yes
+     daemon_reload: yes
+
  - name: restart x11vnc
    service: name=x11vnc enabled=yes state=restarted
+
+ - name: restart x11vnc systemd
+   systemd:
+     name: x11vnc
+     state: restarted
+     enabled: yes
+     daemon_reload: yes
 
  - name: restart HAL
    service: name=hal enabled=yes state=restarted
 
- - name: enable puseaudio fix
-   shell: systemctl enable resume-fix-pulseaudio.service && systemctl --system daemon-reload
+ - name: restart HAL systemd
+   systemd:
+     name: HAL
+     state: restarted
+     enabled: yes
+     daemon_reload: yes
+
+ - name: enable pulseaudio fix
+   systemd:
+     name: resume-fix-pulseaudio
+     enabled: yes
+     daemon_reload: yes
+ 
+ - name: reload udev
+   command: /sbin/udevadm control --reload-rules
+
+ - name: restart set_hdmi_sound
+   systemd:
+     name: set_hdmi_sound
+     enabled: yes
+     state: restarted
+     daemon_reload: yes
