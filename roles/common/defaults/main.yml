@@ -28,7 +28,22 @@ packages_removed_ubuntu:
  - python-apport
  - mlocate
 
-use_nfs: True
+packages_freebsd:
+ - bash
+ - srm
+ - tmux
+ - vim
+ - postfix
+ - rsync
+ - py27-fail2ban
+ - lsof
+ - atop
+ - wget
+ - gtar # needed for ansible "unarchive" module
+
+use_smart: "{{ ansible_virtualization_role != 'guest' }}"
+
+use_ntp: True
 
 all_public_keys: "{{ public_key | union(my_public_keys | default([])) }}"
 

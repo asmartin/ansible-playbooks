@@ -26,6 +26,8 @@ if [ "$(id -u)" != 0 ]; then
 	exit 1
 fi
 
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+
 # NOTE: This script will ALWAYS keep the currently running kernel
 # NOTE: Default is to keep 2 more, user overrides with --keep N
 KEEP=2

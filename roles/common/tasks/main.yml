@@ -1,87 +1,36 @@
 ---
- - name: install common packages (Arch)
-   pacman: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   with_items: "{{ packages_arch }}"
-   when: ansible_os_family == "Archlinux"
-
- - name: install common packages (Ubuntu)
-   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   with_items: "{{ packages_ubuntu }}"
+ - include: ubuntu.yml
    when: ansible_os_family == "Debian"
 
- - name: install nfs support (Ubuntu)
-   apt: name=nfs-client update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   when: ansible_os_family == "Debian" and use_nfs
+ - include: arch.yml
+   when: ansible_os_family == "ArchLinux"
 
- - name: remove unwanted packages (Ubuntu)
-   apt: name={{ item }} state=absent
-   with_items: "{{ packages_removed_ubuntu }}"
-   when: ansible_os_family == "Debian"
+ - include: freebsd.yml
+   when: ansible_os_family == "FreeBSD"
 
  - name: add authorized key
    authorized_key: user=root key="{{ item }}"
-   when: public_key != "" and ansible_os_family == "Debian"
+   when: public_key != "" and ansible_os_family != "ArchLinux"
    with_items: "{{ all_public_keys }}"
-
- - name: remove ubuntu user
-   user: name=ubuntu state=absent
-   when: public_key != ""
-
- - name: install smartmontools
-   apt: name=smartmontools update_cache=yes cache_valid_time="{{ apt_cache_time }}"
-   when: ansible_virtualization_role != "guest" and ansible_os_family == "Debian"
 
  - name: setup smart to monitor drives
    template: src={{ item.src }} dest={{ item.dest }}
    with_items:
-    - { src: smartmontools.j2, dest: /etc/default/smartmontools }
-    - { src: smartd.conf.j2, dest: /etc/smartd.conf }
-   when: ansible_virtualization_role != "guest" and ansible_os_family == "Debian"
-   notify: restart smartmontools
-
- - name: check if md/raids exist
-   shell: if [ -f /proc/mdstat ]; then /bin/true ; else /bin/false ; fi
-   ignore_errors: True
-   changed_when: False
-   register: mdadm_check
-
- - name: monitor raid arrays
-   cron: name="monitor raid arrays" minute="1" job="{{ mdadm_check.stdout }} --monitor --scan --mail={{ notification_email }} -1"
-   when: mdadm_check.rc == 0
-   tags:
-    - not_in_dry_run
-
- - name: configure /etc/mailname
-   template: src=mailname.j2 dest=/etc/mailname
+    - { src: smartmontools.j2, dest: /etc/default/smartmontools, when: "{{ ansible_os_family == 'Debian' }}" }
+    - { src: smartd.conf.j2, dest: "{{ conf_dir }}/smartd.conf" }
+   when: use_smart and item.when|default(True)
+   notify:
+     - restart smartmontools
+     - restart smartd
 
  - name: configure postfix
-   template: src={{ postfix_config }} dest=/etc/postfix/main.cf
+   template: src={{ postfix_config }} dest="{{ conf_dir }}/postfix/main.cf"
    notify: restart postfix
 
- - name: copy config files
-   template: src={{ item.src }} dest={{ item.dest }}
-   when: ansible_os_family == "Debian"
-   with_items:
-    - { src: 20auto_upgrades.j2, dest: /etc/apt/apt.conf.d/20auto-upgrades }
-    - { src: "{{ unattended_upgrades_template }}", dest: /etc/apt/apt.conf.d/50unattended-upgrades }
-    - { src: dpkg.nodoc, dest: /etc/dpkg/dpkg.cfg.d/01_nodoc }
-
  - name: copy scripts
-   template: src={{ item }} dest="/usr/local/bin/{{ item }}" mode=0755
+   template: src="{{ item.name }}" dest="/usr/local/bin/{{ item.name }}" mode=0755
    with_items:
-    - avidlib.sh
-    - purge-old-kernels
+    - { name: avidlib.sh }
 
- - name: purge old kernels
-   cron:
-     name: "purge old kernels"
-     job: /usr/local/bin/purge-old-kernels
-     minute: 0
-     hour: 1
-
- - name: enable magic sysreq keys
-   template:
-     src: 10-magic-sysrq.conf
-     dest: /etc/sysctl.d/10-magic-sysrq.conf
-   notify: sysctl reload
-   when: ansible_virtualization_role != "guest" and ansible_os_family == "Debian"
+ - include: backup_client.yml
+   when: backup_client
