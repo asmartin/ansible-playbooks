@@ -1,5 +1,0 @@
----
-dependencies:
- - { role: nfs-mount, src: "{{ madsonic_music_export }}", dest: "{{ madsonic_music_dir }}", opts: "defaults,nfsvers=3", when: use_nas }
- - { role: nfs-mount, src: "{{ madsonic_video_export }}", dest: "{{ madsonic_video_dir }}", opts: "defaults,nfsvers=3", when: use_nas }
- - { role: nfs-mount, src: "{{ nas_mount_base }}", dest: "{{ madsonic_home }}", opts: "defaults,nfsvers=3", when: use_nas }

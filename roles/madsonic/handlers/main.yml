@@ -1,3 +1,0 @@
----
- - name: restart madsonic
-   service: name=madsonic state=restarted enabled=yes
