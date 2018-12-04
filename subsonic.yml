@@ -1,6 +1,6 @@
 ---
-- hosts: 'madsonic'
+- hosts: 'subsonic'
   remote_user: root
   roles:
    - common
-   - madsonic
+   - subsonic

@@ -1,0 +1,5 @@
+---
+dependencies:
+ - { role: nginx }
+ - { role: nfs-mount, src: "{{ subsonic_music_export }}", dest: "{{ subsonic_music_dir }}", opts: "defaults,nfsvers=3", when: use_nas }
+ - { role: nfs-mount, src: "{{ nas_mount_base }}", dest: "{{ libresonic_home }}", opts: "defaults,nfsvers=3", when: use_nas }

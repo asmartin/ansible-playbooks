@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Libresonic music streaming service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/java -jar /usr/local/bin/{{ libresonic_filename }}
+User={{ libresonic_user }}
+Group={{ libresonic_group }}
+
+[Install]
+WantedBy=multi-user.target

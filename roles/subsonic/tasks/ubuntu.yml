@@ -1,0 +1,53 @@
+---
+  - name: install dependencies              
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+      cache_valid_time: "{{ apt_cache_time }}"
+    with_items:                             
+      - openjdk-8-jre
+      - ffmpeg
+ 
+  - name: download libresonic
+    get_url:
+      url: "{{ libresonic_url }}"
+      dest: "/usr/local/bin/{{ libresonic_filename }}"
+      checksum: "{{ libresonic_checksum }}"
+    notify: restart libresonic
+ 
+  - name: install libresonic systemd unit
+    template:
+      src: libresonic.systemd
+      dest: /etc/systemd/system/libresonic.service
+    notify: restart libresonic
+ 
+  - name: create libresonic group             
+    group:
+      name: "{{ libresonic_group }}"
+ 
+  - name: create libresonic user              
+    user:
+      name: "{{ libresonic_user }}"
+      home: "{{ libresonic_home }}"
+      group: "{{ libresonic_group }}"
+      shell: /bin/false
+      system: yes
+
+  - name: create libresonic directories
+    file:
+      path: "{{ item }}"
+      owner: "{{ libresonic_user }}"
+      group: "{{ libresonic_group }}"
+      state: directory
+    with_items:
+      - "{{ libresonic_home }}"
+      - "{{ libresonic_home }}/transcode"
+
+  - name: symlink ffmpeg
+    file:
+      src: /usr/bin/ffmpeg
+      dest: "{{ libresonic_home }}/transcode/ffmpeg"
+      owner: "{{ libresonic_user }}"
+      group: "{{ libresonic_group }}"
+      state: link

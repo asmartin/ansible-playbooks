@@ -1,0 +1,11 @@
+---
+nginx_cache_static_files: False
+sites:
+ - site_name: "{{ ansible_hostname }}.{{ domain }}"
+   php: False
+   ssl: False
+   extra_directives: []
+   custom_root:
+     - proxy_pass      http://localhost:{{ subsonic_port }};
+     - proxy_set_header Host $host;
+     - proxy_set_header X-Real-IP $remote_addr;

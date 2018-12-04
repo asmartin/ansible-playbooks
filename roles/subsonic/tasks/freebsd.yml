@@ -1,0 +1,26 @@
+---
+  - name: install subsonic
+    pkgng:
+      name: "{{ item }}"
+    with_items:
+      - subsonic-standalone
+
+  - name: download libresonic
+    get_url:
+      url: "{{ libresonic_url }}"
+      dest: "/usr/local/share/subsonic-standalone/subsonic.war"
+      checksum: "{{ libresonic_checksum }}"
+    notify: restart subsonic
+
+  - name: update subsonic service
+    template:
+      src: libresonic.freebsd
+      dest: /usr/local/etc/rc.d/subsonic
+      mode: "0755"
+    notify: restart subsonic
+
+  - name: enable subsonic service
+    sysrc:
+      name: subsonic_enable
+      value: YES
+    notify: restart subsonic
