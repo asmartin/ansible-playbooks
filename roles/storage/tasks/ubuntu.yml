@@ -1,0 +1,14 @@
+---
+ - name: add ZFS ppa                       
+   apt_repository: repo="ppa:zfs-native/stable"                                       
+   when: ansible_distribution_release == "trusty"                                     
+
+ - name: install required packages (trusty)
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"      
+   when: ansible_distribution_release == "trusty"                                     
+   with_items: "{{ storage_packages_ubuntu_trusty }}"                                 
+
+ - name: install required packages
+   apt: name={{ item }} update_cache=yes cache_valid_time="{{ apt_cache_time }}"      
+   when: ansible_distribution_release != "trusty"
+   with_items: "{{ storage_packages_ubuntu_xenial }}"

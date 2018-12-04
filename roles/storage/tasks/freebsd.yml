@@ -1,0 +1,51 @@
+---
+  - name: configure pkg
+    template:
+      src: FreeBSD.conf
+      dest: /etc/pkg/FreeBSD.conf
+    register: pkg_config
+
+  - name: pkg update
+    command: /usr/sbin/pkg update -f
+    when: pkg_config.changed
+
+  - name: install sanoid dependencies
+    pkgng:
+      name: "{{ item }}"
+    with_items:
+      - pv
+      - lzop
+      - p5-Config-IniFiles-2.91
+
+  - name: create sanoid symlinks
+    file:
+      src: "/usr/local/bin/{{ item }}"
+      dest: "/usr/bin/{{ item }}"
+      state: link
+    with_items:
+      - perl
+      - pv
+      - lzop
+
+  - name: create /etc/sanoid symlink
+    file:
+      src: "{{ conf_dir }}/sanoid"
+      dest: /etc/sanoid
+      state: link
+      force: yes
+
+  - name: enable nfs server             
+    sysrc:                              
+      name: "{{ item.name }}"           
+      value: "{{ item.value }}"         
+    with_items:                         
+      - { name: rpcbind_enable, value: YES }                                       
+      - { name: nfs_server_enable, value: YES }                                    
+      - { name: mountd_enable, value: YES }                                        
+      - { name: mountd_flags, value: "-r" }                                        
+    notify: restart nfs freebsd         
+
+  - name: register list of zfs datasets
+    shell: "zfs list -H -o mountpoint | grep {{ storage_dataset }} | grep -vE '{{ exportfs_exclude_regex }}'"
+    register: datasets
+    always_run: True

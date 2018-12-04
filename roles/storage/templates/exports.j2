@@ -1,6 +1,12 @@
 # {{ ansible_managed }}
+{% if ansible_os_family == "FreeBSD" %}
+{% for dataset in datasets.stdout_lines %}
+{{ dataset }}    -network {{ storage_clients }} -mapall=0
+{% endfor %}
+{% elif ansible_os_family == "Debian" %}
 /mnt/storage    {{ storage_clients }}(rw,root_squash,no_subtree_check,anonuid={{ anonuid }},anongid={{ anongid }},fsid=2)
 
 /mnt/storage/containers    {{ container_clients }}(rw,no_root_squash,no_subtree_check,fsid=3)
+{% endif %}
 
 {{ extra_exports }}

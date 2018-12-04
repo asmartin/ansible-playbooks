@@ -1,11 +1,30 @@
 ---
- - name: update sanoid links
-   file: src="/var/cache/sanoid/sanoid-{{ sanoid_version }}/{{ item.src }}" dest="{{ item.dest }}" state=link
+ - name: update sanoid
+   copy:
+     remote_src: True
+     mode: "{{ item.mode|default('0644') }}"
+     src: "/var/cache/sanoid/sanoid-{{ sanoid_version }}/{{ item.src }}"
+     dest: "{{ item.dest }}"
    with_items:
-    - { src: findoid, dest: /usr/local/bin/findoid }
-    - { src: sanoid, dest: /usr/local/bin/sanoid }
-    - { src: syncoid, dest: /usr/local/bin/syncoid }
-    - { src: sanoid.defaults.conf, dest: /etc/sanoid/sanoid.defaults.conf }
+    - { src: findoid, dest: /usr/local/bin/findoid, mode: "0755" }
+    - { src: sanoid, dest: /usr/local/bin/sanoid, mode: "0755" }
+    - { src: syncoid, dest: /usr/local/bin/syncoid, mode: "0755" }
+    - { src: sanoid.defaults.conf, dest: "{{ conf_dir }}/sanoid/sanoid.defaults.conf" }
 
- - name: reload nfs exports
+ - name: reload nfs exports ubuntu
    command: /usr/sbin/exportfs -r
+   when: ansible_os_family == "Debian"
+
+ - name: reload nfs exports freebsd
+   service:
+     name: mountd
+     state: reloaded
+   when: ansible_os_family == "FreeBSD"
+
+ - name: restart nfs freebsd
+   service:
+     name: nfsd
+     state: restarted
+     enabled: yes
+   when: ansible_os_family == "FreeBSD"
+   notify: reload nfs exports freebsd
