@@ -1,0 +1,9 @@
+---
+iocage_freebsd_release: 11.1-RELEASE
+iocage_zpool: zroot
+
+# set to the name of the host interface that will be used by the jails
+host_interface: em0
+
+# content to add to the jail's authorized_keys file
+jail_authorized_keys: ""

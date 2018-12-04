@@ -1,0 +1,28 @@
+---
+  - name: configure /dev/fd
+    mount:
+      path: /dev/fd
+      src: fdesc
+      fstype: fdescfs
+      opts: rw
+      state: mounted
+
+  - name: install iocage
+    pkgng:
+      name: py36-iocage
+
+  - name: enable iocage service
+    sysrc:
+      name: iocage_enable
+      value: YES
+
+  - name: initialize iocage
+    shell: iocage activate {{ iocage_zpool }} && iocage fetch -r {{ iocage_freebsd_release }} && touch /var/cache/iocage_initialized
+    args:
+      creates: /var/cache/iocage_initialized
+
+  - name: install mkjail.sh
+    template:
+      src: mkjail.sh
+      dest: "/usr/local/bin/mkjail.sh"
+      mode: "0755"
