@@ -1,8 +1,0 @@
-# {{ ansible_managed }}
-server {
-  listen          80;
-  server_name     {{ ansible_hostname }};
-  location / {
-    proxy_pass      http://localhost:3000;
-  }
-}

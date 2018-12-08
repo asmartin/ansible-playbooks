@@ -1,6 +1,0 @@
----
-- hosts: 'lxchost'
-  remote_user: root
-  roles:
-   - common
-   - lxc

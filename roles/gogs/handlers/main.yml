@@ -1,6 +1,0 @@
----
- - name: restart gogs
-   service: name=gogs state=restarted enabled=yes
-
- - name: reload nginx
-   service: name=nginx state=reloaded

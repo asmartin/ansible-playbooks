@@ -1,8 +1,0 @@
----
-git_packages:
- - git
- - openjdk-7-jre
-
-gitbucket_dir: /opt/gitbucket
-gitbucket_home: /srv/gitbucket_home
-gitbucket_version: "3.5"

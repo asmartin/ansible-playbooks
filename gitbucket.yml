@@ -1,6 +1,0 @@
----
-- hosts: 'git'
-  remote_user: root
-  roles:
-   - common
-   - gitbucket

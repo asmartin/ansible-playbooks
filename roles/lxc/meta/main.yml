@@ -1,4 +1,0 @@
----
-dependencies:
- - { role: virt-netcfg, when: lxc_configure_network }
- - { role: nfs-mount, src: "{{ nas_mount_base }}/backup", dest: "{{ lxc_backup }}", opts: "defaults,nfsvers=3", when: not installed_with_storage }

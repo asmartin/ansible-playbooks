@@ -1,3 +1,0 @@
----
-dependencies:
- - { role: nfs-mount, src: "{{ nas_mount_base }}", dest: "{{ gogs_storage }}", opts: "defaults,nfsvers=3", when: use_nas }
