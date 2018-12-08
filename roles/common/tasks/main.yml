@@ -27,10 +27,5 @@
    template: src={{ postfix_config }} dest="{{ conf_dir }}/postfix/main.cf"
    notify: restart postfix
 
- - name: copy scripts
-   template: src="{{ item.name }}" dest="/usr/local/bin/{{ item.name }}" mode=0755
-   with_items:
-    - { name: avidlib.sh }
-
  - include: backup_client.yml
    when: backup_client
